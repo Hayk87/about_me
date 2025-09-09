@@ -19,13 +19,8 @@ export class SearchProductPipe implements PipeTransform {
         lang,
         title,
         category_id,
-        measurement_id,
-        quantity_from,
-        quantity_to,
-        buy_price_from,
-        buy_price_to,
-        sell_price_from,
-        sell_price_to,
+        price_from,
+        price_to,
         page,
         limit,
         all,
@@ -48,30 +43,11 @@ export class SearchProductPipe implements PipeTransform {
       ) {
         errors.category_id = translationsSeed.invalid_value.key;
       }
-      if (
-        measurement_id &&
-        (!intPositiveNumberRegexp.test(measurement_id) ||
-          measurement_id === '0')
-      ) {
-        errors.measurement_id = translationsSeed.invalid_value.key;
+      if (price_from && !floatPositiveNumberRegexp.test(price_from)) {
+        errors.price_from = translationsSeed.invalid_value.key;
       }
-      if (quantity_from && !floatPositiveNumberRegexp.test(quantity_from)) {
-        errors.quantity_from = translationsSeed.invalid_value.key;
-      }
-      if (quantity_to && !floatPositiveNumberRegexp.test(quantity_to)) {
-        errors.quantity_to = translationsSeed.invalid_value.key;
-      }
-      if (buy_price_from && !floatPositiveNumberRegexp.test(buy_price_from)) {
-        errors.buy_price_from = translationsSeed.invalid_value.key;
-      }
-      if (buy_price_to && !floatPositiveNumberRegexp.test(buy_price_to)) {
-        errors.buy_price_to = translationsSeed.invalid_value.key;
-      }
-      if (sell_price_from && !floatPositiveNumberRegexp.test(sell_price_from)) {
-        errors.sell_price_from = translationsSeed.invalid_value.key;
-      }
-      if (sell_price_to && !floatPositiveNumberRegexp.test(sell_price_to)) {
-        errors.sell_price_to = translationsSeed.invalid_value.key;
+      if (price_to && !floatPositiveNumberRegexp.test(price_to)) {
+        errors.price_to = translationsSeed.invalid_value.key;
       }
       if (!page) {
         errors.page = translationsSeed.required_field.key;
@@ -89,26 +65,11 @@ export class SearchProductPipe implements PipeTransform {
       if (category_id) {
         category_id = parseInt(category_id);
       }
-      if (measurement_id) {
-        measurement_id = parseInt(measurement_id);
+      if (price_from) {
+        price_from = parseFloat(price_from);
       }
-      if (quantity_from) {
-        quantity_from = parseFloat(quantity_from);
-      }
-      if (quantity_to) {
-        quantity_to = parseFloat(quantity_to);
-      }
-      if (buy_price_from) {
-        buy_price_from = parseFloat(buy_price_from);
-      }
-      if (buy_price_to) {
-        buy_price_to = parseFloat(buy_price_to);
-      }
-      if (sell_price_from) {
-        sell_price_from = parseFloat(sell_price_from);
-      }
-      if (sell_price_to) {
-        sell_price_to = parseFloat(sell_price_to);
+      if (price_to) {
+        price_to = parseFloat(price_to);
       }
       page = parseInt(page);
       if (limit) {
@@ -121,13 +82,8 @@ export class SearchProductPipe implements PipeTransform {
         lang,
         title,
         category_id,
-        measurement_id,
-        quantity_from,
-        quantity_to,
-        buy_price_from,
-        buy_price_to,
-        sell_price_from,
-        sell_price_to,
+        price_from,
+        price_to,
         page,
         limit,
         all,

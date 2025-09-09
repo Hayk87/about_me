@@ -8,9 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProductsEntity } from './products.entity';
 import { SystemUserEntity } from '../system-user/system-user.entity';
-import { MeasurementsEntity } from '../measurement/measurements.entity';
 import { ProductCategoriesEntity } from '../product-categories/product-categories.entity';
-import { TransactionImportDetailsEntity } from '../transaction/transaction-import-details.entity';
 import { rightsMapper, translationsSeed } from '../utils/variables';
 import { CreateProductInterface } from './interface/create-product.interface';
 import { checkPermission } from '../utils/functions';
@@ -19,14 +17,9 @@ import { checkPermission } from '../utils/functions';
 export class ProductsService {
   private pageSize = 5;
   constructor(
-    @InjectRepository(ProductsEntity)
-    private productsRepository: Repository<ProductsEntity>,
-    @InjectRepository(SystemUserEntity)
-    private systemUserRepository: Repository<SystemUserEntity>,
-    @InjectRepository(MeasurementsEntity)
-    private measurementRepository: Repository<MeasurementsEntity>,
-    @InjectRepository(ProductCategoriesEntity)
-    private productCategoryRepository: Repository<ProductCategoriesEntity>,
+    @InjectRepository(ProductsEntity) private productsRepository: Repository<ProductsEntity>,
+    @InjectRepository(SystemUserEntity) private systemUserRepository: Repository<SystemUserEntity>,
+    @InjectRepository(ProductCategoriesEntity) private productCategoryRepository: Repository<ProductCategoriesEntity>,
   ) {}
 
   async createProduct(
@@ -39,12 +32,6 @@ export class ProductsService {
     if (!operator) {
       throw new BadRequestException(translationsSeed.user_not_found.key);
     }
-    const measurement = await this.measurementRepository.findOne({
-      where: { id: data.measurement_id },
-    });
-    if (!measurement) {
-      throw new BadRequestException(translationsSeed.data_not_found.key);
-    }
     const category = await this.productCategoryRepository.findOne({
       where: { id: data.category_id },
     });
@@ -52,21 +39,24 @@ export class ProductsService {
       throw new BadRequestException(translationsSeed.data_not_found.key);
     }
     const product = this.productsRepository.create({
-      ...data,
-      // operator,
-      measurement,
+      code: data.code,
+      link: data.link || null,
+      title: data.title,
+      content: data.content,
+      price: data.price,
+      operator,
       category,
       is_deleted: false,
     });
     await this.productsRepository.save(product);
-    // delete product.operator.password;
-    // delete product.operator.secret;
+    delete product.operator.password;
+    delete product.operator.secret;
     return product;
   }
 
   async getProducts(
     searchParams: SearchProductInterface,
-  ): Promise<{ list: ProductsEntity[]; count: number }> {
+  ): Promise<{ list: any[]; count: number }> {
     const limit = searchParams.limit || this.pageSize;
     const offset = (searchParams.page - 1) * limit;
     const qbList = this.productsRepository.createQueryBuilder('products');
@@ -80,23 +70,11 @@ export class ProductsService {
       'products.category_id = category.id',
     );
     qbList.leftJoinAndMapOne(
-      'products.measurement',
-      MeasurementsEntity,
-      'measurement',
-      'products.measurement_id = measurement.id',
-    );
-    qbList.leftJoinAndMapOne(
       'products.operator',
       SystemUserEntity,
       'operator',
       'products.created_system_user_id = operator.id',
     );
-    if (searchParams.all) {
-      qbList.leftJoinAndSelect(
-        'products.transaction_imports',
-        'product_transaction_imports_details',
-      );
-    }
     qbList.andWhere('products.is_deleted = :is_deleted', { is_deleted: false });
     qbCount?.andWhere('products.is_deleted = :is_deleted', {
       is_deleted: false,
@@ -110,6 +88,15 @@ export class ProductsService {
         { title: `%${searchParams.title}%` },
       );
     }
+    if (searchParams.code) {
+      qbList.andWhere(`products.code ilike :code`, {
+        code: `%${searchParams.code}%`,
+      });
+      qbCount?.andWhere(
+        `products.code ilike :code`,
+        { code: `%${searchParams.code}%` },
+      );
+    }
     if (searchParams.category_id) {
       qbList.andWhere('products.category_id = :category_id', {
         category_id: searchParams.category_id,
@@ -118,60 +105,20 @@ export class ProductsService {
         category_id: searchParams.category_id,
       });
     }
-    if (searchParams.measurement_id) {
-      qbList.andWhere('products.measurement_id = :measurement_id', {
-        measurement_id: searchParams.measurement_id,
+    if (searchParams.price_from) {
+      qbList.andWhere('products.price >= :price_from', {
+        price_from: searchParams.price_from,
       });
-      qbCount?.andWhere('products.measurement_id = :measurement_id', {
-        measurement_id: searchParams.measurement_id,
-      });
-    }
-    if (searchParams.quantity_from) {
-      qbList.andWhere('products.quantity >= :quantity_from', {
-        quantity_from: searchParams.quantity_from,
-      });
-      qbCount?.andWhere('products.quantity >= :quantity_from', {
-        quantity_from: searchParams.quantity_from,
+      qbCount?.andWhere('products.price >= :price_from', {
+        price_from: searchParams.price_from,
       });
     }
-    if (searchParams.quantity_to) {
-      qbList.andWhere('products.quantity <= :quantity_to', {
-        quantity_to: searchParams.quantity_to,
+    if (searchParams.price_to) {
+      qbList.andWhere('products.price <= :price_to', {
+        price_to: searchParams.price_to,
       });
-      qbCount?.andWhere('products.quantity <= :quantity_to', {
-        quantity_to: searchParams.quantity_to,
-      });
-    }
-    if (searchParams.buy_price_from) {
-      qbList.andWhere('products.buy_price >= :buy_price_from', {
-        buy_price_from: searchParams.buy_price_from,
-      });
-      qbCount?.andWhere('products.buy_price >= :buy_price_from', {
-        buy_price_from: searchParams.buy_price_from,
-      });
-    }
-    if (searchParams.buy_price_to) {
-      qbList.andWhere('products.buy_price <= :buy_price_to', {
-        buy_price_to: searchParams.buy_price_to,
-      });
-      qbCount?.andWhere('products.buy_price <= :buy_price_to', {
-        buy_price_to: searchParams.buy_price_to,
-      });
-    }
-    if (searchParams.sell_price_from) {
-      qbList.andWhere('products.sell_price >= :sell_price_from', {
-        sell_price_from: searchParams.sell_price_from,
-      });
-      qbCount?.andWhere('products.sell_price >= :sell_price_from', {
-        sell_price_from: searchParams.sell_price_from,
-      });
-    }
-    if (searchParams.sell_price_to) {
-      qbList.andWhere('products.sell_price <= :sell_price_to', {
-        sell_price_to: searchParams.sell_price_to,
-      });
-      qbCount?.andWhere('products.sell_price <= :sell_price_to', {
-        sell_price_to: searchParams.sell_price_to,
+      qbCount?.andWhere('products.price <= :price_to', {
+        price_to: searchParams.price_to,
       });
     }
     qbList.orderBy('products.created_at', 'DESC');
@@ -184,16 +131,8 @@ export class ProductsService {
       qbList.getMany(),
       qbCount?.getCount(),
     ]);
-    // console.log('list >>>>>>>>>', list, count);
 
-    return {
-      list: list.map((item: any) => {
-        item.operator.secret = undefined;
-        item.operator.password = undefined;
-        return item;
-      }),
-      count,
-    };
+    return { list, count };
   }
 
   async getProductById(
@@ -203,9 +142,8 @@ export class ProductsService {
     const product = await this.productsRepository.findOne({
       where: { is_deleted: false, id },
       relations: {
-        measurement: withRelations,
         category: withRelations,
-        // operator: withRelations,
+        operator: withRelations,
       },
     });
     if (!product) {
@@ -242,40 +180,7 @@ export class ProductsService {
       }
       product.category = category;
     }
-    if (product.measurement.id !== data.measurement_id) {
-      const measurement = await this.measurementRepository.findOne({
-        where: { id: data.measurement_id },
-      });
-      if (!measurement) {
-        throw new BadRequestException(translationsSeed.data_not_found.key);
-      }
-      const unavailableForChangeOtherParams = checkPermission(
-        user,
-        [
-          rightsMapper.productUpdateOnlyBuyPrice,
-          rightsMapper.productUpdateOnlySellPrice,
-        ],
-        true,
-      );
-      if (unavailableForChangeOtherParams && !user.is_root) {
-        throw new ForbiddenException(translationsSeed.forbidden_request.key);
-      }
-      product.measurement = measurement;
-    }
-    if (product.quantity !== data.quantity) {
-      const unavailableForChangeOtherParams = checkPermission(
-        user,
-        [
-          rightsMapper.productUpdateOnlyBuyPrice,
-          rightsMapper.productUpdateOnlySellPrice,
-        ],
-        true,
-      );
-      if (unavailableForChangeOtherParams && !user.is_root) {
-        throw new ForbiddenException(translationsSeed.forbidden_request.key);
-      }
-    }
-    if (product.buy_price !== data.buy_price) {
+    if (product.price !== data.price) {
       const p1 = checkPermission(
         user,
         [rightsMapper.productUpdateOnlyBuyPrice],
@@ -290,25 +195,8 @@ export class ProductsService {
         throw new ForbiddenException(translationsSeed.forbidden_request.key);
       }
     }
-    if (product.sell_price !== data.sell_price) {
-      const p1 = checkPermission(
-        user,
-        [rightsMapper.productUpdateOnlyBuyPrice],
-        true,
-      );
-      const p2 = checkPermission(
-        user,
-        [rightsMapper.productUpdateOnlySellPrice],
-        true,
-      );
-      if (p1 && !p2 && !user.is_root) {
-        throw new ForbiddenException(translationsSeed.forbidden_request.key);
-      }
-    }
     product.title = data.title;
-    product.buy_price = data.buy_price;
-    product.sell_price = data.sell_price;
-    product.quantity = data.quantity;
+    product.price = data.price;
     return await this.productsRepository.save(product);
   }
 

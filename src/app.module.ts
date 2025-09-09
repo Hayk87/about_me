@@ -13,10 +13,7 @@ import { AuthModule } from './auth/auth.module';
 import { StaffsModule } from './staffs/staffs.module';
 import { OfferModule } from './offer/offer.module';
 import { ProductCategoriesModule } from './product-categories/product-categories.module';
-// import { MeasurementsModule } from './measurement/measurements.module';
-// import { ProductsModule } from './products/products.module';
-// import { TransactionModule } from './transaction/transaction.module';
-// import { ReportsModule } from './reports/reports.module';
+import { ProductsModule } from './products/products.module';
 
 
 @Module({
@@ -54,10 +51,7 @@ import { ProductCategoriesModule } from './product-categories/product-categories
     AuthModule,
     OfferModule,
     ProductCategoriesModule,
-    // TransactionModule,
-    // MeasurementsModule,
-    // ProductsModule,
-    // ReportsModule,
+    ProductsModule,
   ],
   controllers: [],
   providers: [

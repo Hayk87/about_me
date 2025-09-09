@@ -17,12 +17,8 @@ const menuData: NavbarMenuInterface[] = [
   { path: adminPagesPath.staffs, viewPagePermission: rightsMapperData.staffRead, name: 'staffs' },
   { path: adminPagesPath.systemUsers, viewPagePermission: rightsMapperData.systemUserRead, name: 'system_users' },
   { path: adminPagesPath.offers, viewPagePermission: rightsMapperData.offerRead, name: 'offers' },
-  // { path: adminPagesPath.measurements, viewPagePermission: rightsMapperData.measurementRead, name: 'measurements' },
-  // { path: adminPagesPath.productCategories, viewPagePermission: rightsMapperData.productCategoriesRead, name: 'product_categories' },
-  // { path: adminPagesPath.products, viewPagePermission: rightsMapperData.productRead, name: 'products' },
-  // { path: adminPagesPath.transactionImports, viewPagePermission: rightsMapperData.transactionImportRead, name: 'transaction_imports' },
-  // { path: adminPagesPath.transactionExports, viewPagePermission: rightsMapperData.transactionExportRead, name: 'transaction_exports' },
-  // { path: adminPagesPath.reports, viewPagePermission: rightsMapperData.reportsPage, name: 'reports' },
+  { path: adminPagesPath.productCategories, viewPagePermission: rightsMapperData.productCategoriesRead, name: 'product_categories' },
+  { path: adminPagesPath.products, viewPagePermission: rightsMapperData.productRead, name: 'products' },
 ];
 
 const Navigation = () => {

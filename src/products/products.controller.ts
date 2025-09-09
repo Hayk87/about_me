@@ -38,9 +38,6 @@ export class ProductsController {
 
   @SystemUserMetaRights(
     rightsMapper.productRead,
-    rightsMapper.transactionImportCreate,
-    rightsMapper.transactionExportCreate,
-    rightsMapper.reportsPage,
   )
   @UseGuards(AuthGuard, SystemUserGuard)
   @ApiOkResponse({ type: ListResponseDto, isArray: true })

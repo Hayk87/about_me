@@ -22,24 +22,9 @@ export class SearchProductDto {
   @ApiPropertyOptional({ type: String, description: 'Category ID' })
   category_id?: number;
 
-  @ApiPropertyOptional({ type: String, description: 'Measurement ID' })
-  measurement_id?: number;
+  @ApiPropertyOptional({ type: String, description: 'Price From' })
+  price_from?: number;
 
-  @ApiPropertyOptional({ type: String, description: 'Quantity From' })
-  quantity_from?: number;
-
-  @ApiPropertyOptional({ type: String, description: 'Quantity To' })
-  quantity_to?: number;
-
-  @ApiPropertyOptional({ type: String, description: 'Buy price From' })
-  buy_price_from?: number;
-
-  @ApiPropertyOptional({ type: String, description: 'Buy price To' })
-  buy_price_to?: number;
-
-  @ApiPropertyOptional({ type: String, description: 'Sell price From' })
-  sell_price_from?: number;
-
-  @ApiPropertyOptional({ type: String, description: 'Sell price To' })
-  sell_price_to?: number;
+  @ApiPropertyOptional({ type: String, description: 'Price To' })
+  price_to?: number;
 }

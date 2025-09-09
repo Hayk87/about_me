@@ -4,12 +4,8 @@ class SearchProductInterface {
   page: number;
   limit?: number;
   title?: string;
+  code?: string;
   category_id?: number;
-  measurement_id?: number;
-  quantity_from?: number;
-  quantity_to?: number;
-  buy_price_from?: number;
-  buy_price_to?: number;
-  sell_price_from?: number;
-  sell_price_to?: number;
+  price_from?: number;
+  price_to?: number;
 }

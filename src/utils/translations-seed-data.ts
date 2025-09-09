@@ -776,4 +776,25 @@ export const translationsSeedData = {
       en: 'Print',
     },
   },
+  welcome: {
+    key: 'welcome',
+    value: {
+      hy: 'Բարի գալուստ',
+      en: 'Welcome',
+    },
+  },
+  about_me: {
+    key: 'about_me',
+    value: {
+      hy: 'Իմ մասին',
+      en: 'About me',
+    },
+  },
+  buy_app: {
+    key: 'buy_app',
+    value: {
+      hy: 'Գնել ծրագիր',
+      en: 'Buy application',
+    },
+  },
 };

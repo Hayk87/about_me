@@ -53,9 +53,6 @@ export class SystemUserController {
   })
   @SystemUserMetaRights(
     rightsMapper.systemUserRead,
-    rightsMapper.transactionImportRead,
-    rightsMapper.transactionExportRead,
-    rightsMapper.reportsPage,
   )
   @UseGuards(AuthGuard, SystemUserGuard)
   @Get()
