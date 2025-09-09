@@ -19,9 +19,13 @@ export class CreateProductPipe implements PipeTransform {
       errors.code = translationsSeed.required_field.key;
     } else if (post.code && typeof post.code !== 'string') {
       errors.code = translationsSeed.invalid_value.key;
+    } else {
+      plainData.code = post.code;
     }
     if (post.link && typeof post.link !== 'string') {
       errors.link = translationsSeed.invalid_value.key;
+    } else {
+      plainData.link = post.link;
     }
     for (const lang of languagesListData) {
       if (!post.title?.[lang.code]) {

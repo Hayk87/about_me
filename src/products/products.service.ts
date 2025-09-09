@@ -157,7 +157,6 @@ export class ProductsService {
   async updateProduct(
     id: number,
     data: CreateProductInterface,
-    user: SystemUserEntity,
   ): Promise<ProductsEntity> {
     const product = await this.getProductById(id, true);
     if (product.category.id !== data.category_id) {
@@ -167,36 +166,12 @@ export class ProductsService {
       if (!category) {
         throw new BadRequestException(translationsSeed.data_not_found.key);
       }
-      const unavailableForChangeOtherParams = checkPermission(
-        user,
-        [
-          rightsMapper.productUpdateOnlyBuyPrice,
-          rightsMapper.productUpdateOnlySellPrice,
-        ],
-        true,
-      );
-      if (unavailableForChangeOtherParams && !user.is_root) {
-        throw new ForbiddenException(translationsSeed.forbidden_request.key);
-      }
       product.category = category;
-    }
-    if (product.price !== data.price) {
-      const p1 = checkPermission(
-        user,
-        [rightsMapper.productUpdateOnlyBuyPrice],
-        true,
-      );
-      const p2 = checkPermission(
-        user,
-        [rightsMapper.productUpdateOnlySellPrice],
-        true,
-      );
-      if (!p1 && p2 && !user.is_root) {
-        throw new ForbiddenException(translationsSeed.forbidden_request.key);
-      }
     }
     product.title = data.title;
     product.price = data.price;
+    product.code = data.code;
+    product.link = data.link || null;
     return await this.productsRepository.save(product);
   }
 

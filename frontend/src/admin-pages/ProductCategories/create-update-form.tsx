@@ -16,7 +16,7 @@ interface CreateUpdateFormInterface {
 }
 
 const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement => {
-  const [state, setState] = useState<{ title: Record<string, string> }>({ title: {} });
+  const [state, setState] = useState<{ code: string, title: Record<string, string> }>({ code: '', title: {} });
   const [errors, setErrors] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(false);
   const { t } = useTranslate();
@@ -30,6 +30,10 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
 
   const setValue = (lang: string) => (ev: any) => {
     setState(prev => ({ ...prev, title: { ...prev.title, [lang]: ev.target.value } }));
+  }
+
+  const setCode = (ev: any) => {
+    setState(prev => ({ ...prev, code: ev.target.value }));
   }
 
   const goBack = () => {
@@ -67,7 +71,7 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
       setLoading(true);
       getProductsCategoryById(id)
         .then(res => {
-          setState({ title: res.data.title });
+          setState({ title: res.data.title, code: res.data.code });
         })
         .catch(err => {
           console.log(err.response.data.message);
@@ -100,6 +104,19 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
                 {errors.title?.[lang.code] && <FormFeedback>{t(errors.title?.[lang.code])}</FormFeedback>}
               </FormGroup>
             ))}
+            <FormGroup>
+              <Label for="code">{t('code')}</Label>
+              <Input
+                type="text"
+                id="code"
+                placeholder={t('code')}
+                onInput={setCode}
+                value={state.code || ''}
+                invalid={!!errors.code}
+                readOnly={updateUnavailable}
+              />
+              {errors.code && <FormFeedback>{t(errors.code)}</FormFeedback>}
+            </FormGroup>
             <div className={styles.buttonsActions}>
               <Button type="button" color="secondary" className={styles.goBack} onClick={goBack} size="sm">
                 <FaArrowLeft /> {t('go_back')}

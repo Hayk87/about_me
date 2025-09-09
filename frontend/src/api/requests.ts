@@ -2,7 +2,6 @@ import axios from 'axios';
 import api from './axios';
 import {
   LoginInterface,
-  MeasurementSearchInterface,
   ProductsCategoriesSearchInterface,
   ProductsSearchInterface,
   TranslationSearchInterface,
@@ -36,16 +35,6 @@ export const getOfferById = (id: string) => api.get(`/api/offer/${id}`);
 
 export const getOfferFileById = (id: string) => api.get(`/api/files/details/${id}`, { responseType: 'blob' });
 
-export const getMeasurementList = (params: MeasurementSearchInterface) => api.get('/api/measurement', { params });
-
-export const createMeasurement = (data: any) => api.post('/api/measurement', data);
-
-export const getMeasurementById = (id: string) => api.get(`/api/measurement/${id}`);
-
-export const updateMeasurement = (id: string, data: any) => api.put(`/api/measurement/${id}`, data);
-
-export const deleteMeasurement = (id: string) => api.delete(`/api/measurement/${id}`);
-
 export const getProductsCategoriesList = (params: ProductsCategoriesSearchInterface) => api.get('/api/product-categories', { params });
 
 export const createProductsCategories = (data: any) => api.post('/api/product-categories', data);
@@ -68,7 +57,7 @@ export const deleteProduct = (id: string) => api.delete(`/api/products/${id}`);
 
 export const getAllRights = () => api.get('/api/rights');
 
-export const getStaffsList = (params: MeasurementSearchInterface) => api.get('/api/staffs', { params });
+export const getStaffsList = (params: any) => api.get('/api/staffs', { params });
 
 export const createStaff = (data: any) => api.post('/api/staffs', data);
 
@@ -93,30 +82,6 @@ export const blockSystemUser = (id: string) => api.put(`/api/system-user/${id}/b
 export const toggleEnableAuthenticator = (enable: boolean) => api.post('/api/system-user/generate-authenticator', { enable });
 
 export const changeSystemUserPassword = (data: { current_password: string, new_password: string }) => api.put(`/api/system-user/change-password`, data);
-
-export const getTransactionImportsList = (params: any) => api.get('/api/transaction/import', { params });
-
-export const createTransactionImport = (data: any) => api.post('/api/transaction/import', data);
-
-export const getTransactionImportById = (id: string) => api.get(`/api/transaction/import/${id}`);
-
-export const deleteTransactionImport = (trId: string) => api.delete(`/api/transaction/import/${trId}`);
-
-export const deleteTransactionImportDetails = (trId: string, id: string) => api.delete(`/api/transaction/import/${trId}/details/${id}`);
-
-export const getTransactionExportsList = (params: any) => api.get('/api/transaction/export', { params });
-
-export const createTransactionExport = (data: any) => api.post('/api/transaction/export', data);
-
-export const getTransactionExportById = (id: string) => api.get(`/api/transaction/export/${id}`);
-
-export const deleteTransactionExport = (trId: string) => api.delete(`/api/transaction/export/${trId}`);
-
-export const deleteTransactionExportDetails = (trId: string, id: string) => api.delete(`/api/transaction/export/${trId}/details/${id}`);
-
-export const getReportDetailsType = (data: ReportDetailsType, options: any) => api.post(`/api/reports/details`, data, { ...options });
-
-export const getReportTotalType = (data: ReportTotalType, options: any) => api.post(`/api/reports/total`, data, { ...options });
 
 export const sendOfferToAdmin = (data: any) => api.post(`/api/offer`, data, { headers: { 'Content-Type': 'multipart/form-data' } });
 

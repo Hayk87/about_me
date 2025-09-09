@@ -79,8 +79,6 @@ export class ProductsController {
 
   @SystemUserMetaRights(
     rightsMapper.productUpdate,
-    rightsMapper.productUpdateOnlyBuyPrice,
-    rightsMapper.productUpdateOnlySellPrice,
   )
   @UseGuards(AuthGuard, SystemUserGuard)
   @ApiOkResponse({ type: Object, isArray: false })
@@ -96,9 +94,8 @@ export class ProductsController {
     )
     id: number,
     @Body(pipes.CreateProductPipe) data: CreateProductDto,
-    @SystemUser() user,
   ): Promise<ProductsEntity> {
-    return this.productsService.updateProduct(id, data, user);
+    return this.productsService.updateProduct(id, data);
   }
 
   @SystemUserMetaRights(rightsMapper.productDelete)

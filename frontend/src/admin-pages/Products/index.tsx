@@ -5,7 +5,7 @@ import { Table, Button } from 'reactstrap';
 import { FaPlus, FaMarker, FaTrash, FaFilter } from 'react-icons/fa6';
 import queryString from "query-string";
 import { rightsMapperData, useTranslate, applicationBaseURL, checkPermission, formatNumberWithCommas, adminPagesPath } from '../../utils';
-import { getProductsList, deleteProduct, getMeasurementList, getProductsCategoriesList } from '../../api/requests';
+import { getProductsList, deleteProduct, getProductsCategoriesList } from '../../api/requests';
 import { RootState } from "../../store";
 import Pagination from "../../components/Pagination";
 import Loading from "../../components/Loading";
@@ -22,15 +22,11 @@ const itemsPerPage = 10;
 const pagesSize = 5;
 
 const fields = [
-  { type: 'text', tr_key: 'naming', key: 'title', style: { width: '20%' } },
   { type: 'select-one-searchbox', tr_key: 'category_title', key: 'category_id', style: { width: '20%' }, isMulti: false },
-  { type: 'select-one-searchbox', tr_key: 'measurement_title', key: 'measurement_id', style: { width: '20%' }, isMulti: false },
-  { type: 'float-positive-number', tr_key: 'quantity_from', key: 'quantity_from', style: { width: '20%' } },
-  { type: 'float-positive-number', tr_key: 'quantity_to', key: 'quantity_to', style: { width: '20%' } },
-  { type: 'float-positive-number', tr_key: 'buy_price_from', key: 'buy_price_from', style: { width: '20%' } },
-  { type: 'float-positive-number', tr_key: 'buy_price_to', key: 'buy_price_to', style: { width: '20%' } },
-  { type: 'float-positive-number', tr_key: 'sell_price_from', key: 'sell_price_from', style: { width: '20%' } },
-  { type: 'float-positive-number', tr_key: 'sell_price_to', key: 'sell_price_to', style: { width: '20%' } },
+  { type: 'text', tr_key: 'naming', key: 'title', style: { width: '20%' } },
+  { type: 'text', tr_key: 'products_code', key: 'code', style: { width: '20%' } },
+  { type: 'float-positive-number', tr_key: 'price_from', key: 'price_from', style: { width: '20%' } },
+  { type: 'float-positive-number', tr_key: 'price_to', key: 'price_to', style: { width: '20%' } },
 ];
 
 export default function Page() {
@@ -128,11 +124,10 @@ export default function Page() {
 
   useEffect(() => {
     const getAll = { lang: lngCode, page: 1, all: 'on' };
-    Promise.all([getMeasurementList(getAll), getProductsCategoriesList(getAll)])
+    Promise.all([getProductsCategoriesList(getAll)])
       .then(res => {
         setOptions({
-          measurement_id: res[0].data.list.map((item: any) => ({ label: item.measurement_title?.[lngCode], value: item.measurement_id })),
-          category_id: res[1].data.list.map((item: any) => ({ label: item.product_category_title?.[lngCode], value: item.product_category_id })),
+          category_id: res[0].data.list.map((item: any) => ({ label: item.product_category_title?.[lngCode], value: item.product_category_id })),
         });
       })
       .catch(err => {
@@ -171,10 +166,9 @@ export default function Page() {
           <tr>
             <th className="text-center">{t('naming')}</th>
             <th className="text-center">{t('category_title')}</th>
-            <th className="text-center">{t('measurement_title')}</th>
-            <th className="text-center">{t('products_quantity')}</th>
-            <th className="text-center">{t('products_buy_price')}</th>
-            <th className="text-center">{t('products_sell_price')}</th>
+            <th className="text-center">{t('products_code')}</th>
+            <th className="text-center">{t('products_link')}</th>
+            <th className="text-center">{t('products_price')}</th>
             <th style={{ width: '220px', textAlign: 'center' }} />
           </tr>
           </thead>
@@ -185,10 +179,9 @@ export default function Page() {
                 <tr key={item.id}>
                   <td className="text-center">{item.title?.[lngCode]}</td>
                   <td className="text-center">{item.category?.title?.[lngCode]}</td>
-                  <td className="text-center">{item.measurement?.title?.[lngCode]}</td>
-                  <td className="text-center">{formatNumberWithCommas(item.quantity)}</td>
-                  <td className="text-center">{formatNumberWithCommas(item.buy_price)}</td>
-                  <td className="text-center">{formatNumberWithCommas(item.sell_price)}</td>
+                  <td className="text-center">{item.code}</td>
+                  <td className="text-center">{item.link && <a href={item.link} target="_blank">{item.link}</a>}</td>
+                  <td className="text-center">{formatNumberWithCommas(item.price)}</td>
                   <td style={{ textAlign: 'center' }}>
                     {checkPermission(profile.data, rightsMapperData.productReadDetails) && (
                       <>

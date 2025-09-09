@@ -19,6 +19,7 @@ export class SearchProductPipe implements PipeTransform {
         lang,
         title,
         category_id,
+        code,
         price_from,
         price_to,
         page,
@@ -36,6 +37,9 @@ export class SearchProductPipe implements PipeTransform {
       }
       if (title && typeof title !== 'string') {
         errors.title = translationsSeed.invalid_value.key;
+      }
+      if (code && typeof code !== 'string') {
+        errors.code = translationsSeed.invalid_value.key;
       }
       if (
         category_id &&
@@ -81,6 +85,7 @@ export class SearchProductPipe implements PipeTransform {
       return {
         lang,
         title,
+        code,
         category_id,
         price_from,
         price_to,

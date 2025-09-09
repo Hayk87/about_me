@@ -19,26 +19,25 @@ import {
   getProductById,
   createProduct,
   updateProduct,
-  getMeasurementList,
   getProductsCategoriesList
 } from "../../api/requests";
 import { RootState } from "../../store";
 import { useToast } from "../../hooks";
 import styles from "./create-update-form-styles.module.scss";
+import { ProductsCategoriesSearchInterface } from "../../interfaces";
 
 interface CreateUpdateFormInterface {
   id?: string;
 }
 
-interface OptionsInterface { category_id: { value: number, title: string }[], measurement_id: { value: number, title: string }[] }
+interface OptionsInterface { category_id: { value: number, title: string }[] }
 
 const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement => {
   const [state, setState] = useState<any>({});
   const [errors, setErrors] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(false);
-  const [options, setOptions] = useState<OptionsInterface>({ category_id: [], measurement_id: [] });
+  const [options, setOptions] = useState<OptionsInterface>({ category_id: [] });
   const selectedCategory = options.category_id.find((c: any) => c.value === state.category_id);
-  const selectedMeasurement = options.measurement_id.find((c: any) => c.value === state.measurement_id);
   const { t } = useTranslate();
   const location = useLocation();
   const navigate = useNavigate();
@@ -49,13 +48,15 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
   const parsed = queryString.parse(location.search);
   const lngCode = parsed.lng || defaultLang.code;
   const updateUnavailable = !!(id && !checkPermission(profile.data, rightsMapperData.productUpdate));
-  const updateBuyPriceAvailable = id && checkPermission(profile.data, rightsMapperData.productUpdateOnlyBuyPrice);
-  const updateSellPriceAvailable = id && checkPermission(profile.data, rightsMapperData.productUpdateOnlySellPrice);
-  const enableUpdateForm = !updateUnavailable || updateBuyPriceAvailable || updateSellPriceAvailable;
 
-  const setValue = (lang: string) => (ev: any) => {
-    setState((prev: any) => ({ ...prev, title: { ...prev.title, [lang]: ev.target.value } }));
-    setErrors((prev: any) => ({ ...prev, title: { ...prev.title, [lang]: '' } }));
+  const setValue = (lang: string, key: 'title' | 'content') => (ev: any) => {
+    setState((prev: any) => ({ ...prev, [key]: { ...prev[key], [lang]: ev.target.value } }));
+    setErrors((prev: any) => ({ ...prev, [key]: { ...prev[key], [lang]: '' } }));
+  }
+
+  const handleChange = (key: 'link' | 'code') => (ev: any) => {
+    setState((prev: any) => ({ ...prev, [key]: ev.target.value }));
+    setErrors((prev: any) => ({ ...prev, [key]: '' }));
   }
 
   const setFloatFieldsValue = (key: string) => (ev: any) => {
@@ -80,7 +81,7 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
 
   const handleSave = (ev: any) => {
     ev.preventDefault();
-    if (!enableUpdateForm) return;
+    if (updateUnavailable) return;
     setLoading(true);
     setErrors({});
     let promise = null;
@@ -110,11 +111,11 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
         .then(res => {
           setState({
             title: res.data.title,
+            content: res.data.content,
             category_id: res.data.category?.id,
-            measurement_id: res.data.measurement?.id,
-            quantity: res.data.quantity,
-            buy_price: res.data.buy_price,
-            sell_price: res.data.sell_price,
+            code: res.data.code,
+            link: res.data.link,
+            price: res.data.price,
           });
         })
         .catch(err => {
@@ -126,12 +127,11 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
   }, []);
 
   useEffect(() => {
-    const getAll = { lang: lngCode, page: 1, all: 'on' };
-    Promise.all([getMeasurementList(getAll), getProductsCategoriesList(getAll)])
+    const getAll: ProductsCategoriesSearchInterface = { lang: lngCode, all: 'on', page: 1 } as ProductsCategoriesSearchInterface;
+    Promise.all([getProductsCategoriesList(getAll)])
       .then(res => {
         setOptions({
-          measurement_id: res[0].data.list.map((item: any) => ({ label: item.measurement_title?.[lngCode], value: item.measurement_id })),
-          category_id: res[1].data.list.map((item: any) => ({ label: item.product_category_title?.[lngCode], value: item.product_category_id })),
+          category_id: res[0].data.list.map((item: any) => ({ label: item.product_category_title?.[lngCode], value: item.product_category_id })),
         });
       })
       .catch(err => {
@@ -145,21 +145,6 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
         <Col md={4} />
         <Col md={4}>
           <Form onSubmit={handleSave} className={styles.createUpdateForm}>
-            {languages.list.map(lang => (
-              <FormGroup key={lang.code}>
-                <Label for={`title_${lang.code}`}>{`${t('naming')} (${lang.name})`}</Label>
-                <Input
-                  type="text"
-                  id={`title_${lang.code}`}
-                  placeholder={`${t('naming')} (${lang.name})`}
-                  onInput={setValue(lang.code)}
-                  value={state.title?.[lang.code] || ''}
-                  invalid={!!errors.title?.[lang.code]}
-                  disabled={updateUnavailable}
-                />
-                {errors.title?.[lang.code] && <FormFeedback>{t(errors.title?.[lang.code])}</FormFeedback>}
-              </FormGroup>
-            ))}
             <FormGroup>
               <Label htmlFor="category_id">{t('category_title')}</Label>
               <Select
@@ -174,64 +159,80 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
               <Input type="hidden" invalid />
               {errors.category_id && <FormFeedback>{t(errors.category_id)}</FormFeedback>}
             </FormGroup>
+            {languages.list.map(lang => (
+              <React.Fragment key={lang.code}>
+                <FormGroup>
+                  <Label for={`title_${lang.code}`}>{`${t('naming')} (${lang.name})`}</Label>
+                  <Input
+                    type="text"
+                    id={`title_${lang.code}`}
+                    placeholder={`${t('naming')} (${lang.name})`}
+                    onInput={setValue(lang.code, 'title')}
+                    value={state.title?.[lang.code] || ''}
+                    invalid={!!errors.title?.[lang.code]}
+                    disabled={updateUnavailable}
+                  />
+                  {errors.title?.[lang.code] && <FormFeedback>{t(errors.title?.[lang.code])}</FormFeedback>}
+                </FormGroup>
+                <FormGroup>
+                  <Label for={`content_${lang.code}`}>{`${t('content')} (${lang.name})`}</Label>
+                  <Input
+                    type="textarea"
+                    id={`content_${lang.code}`}
+                    placeholder={`${t('content')} (${lang.name})`}
+                    onInput={setValue(lang.code, 'content')}
+                    value={state.content?.[lang.code] || ''}
+                    invalid={!!errors.content?.[lang.code]}
+                    disabled={updateUnavailable}
+                  />
+                  {errors.content?.[lang.code] && <FormFeedback>{t(errors.content?.[lang.code])}</FormFeedback>}
+                </FormGroup>
+              </React.Fragment>
+            ))}
             <FormGroup>
-              <Label htmlFor="measurement_id">{t('measurement_title')}</Label>
-              <Select
-                id="measurement_id"
-                placeholder={t('measurement_title')}
-                options={options.measurement_id}
-                value={selectedMeasurement || null}
-                onChange={handleOption('measurement_id')}
-                isDisabled={updateUnavailable}
-                isClearable
-              />
-              <Input type="hidden" invalid />
-              {errors.measurement_id && <FormFeedback>{t(errors.measurement_id)}</FormFeedback>}
-            </FormGroup>
-            <FormGroup>
-              <Label for="quantity">{t('products_quantity')}</Label>
+              <Label for="code">{t('products_code')}</Label>
               <Input
                 type="text"
-                id="quantity"
-                placeholder={t('products_quantity')}
-                onInput={setFloatFieldsValue('quantity')}
-                value={state.quantity === undefined ? '' : formatNumberWithCommas(state.quantity)}
-                invalid={!!errors.quantity}
+                id="code"
+                placeholder={t('products_code')}
+                onInput={handleChange('code')}
+                value={state.code || ''}
+                invalid={!!errors.code}
                 disabled={updateUnavailable}
               />
-              {errors.quantity && <FormFeedback>{t(errors.quantity)}</FormFeedback>}
+              {errors.code && <FormFeedback>{t(errors.code)}</FormFeedback>}
             </FormGroup>
             <FormGroup>
-              <Label for="buy_price">{t('products_buy_price')}</Label>
+              <Label for="link">{t('products_link')}</Label>
               <Input
                 type="text"
-                id="buy_price"
-                placeholder={t('products_buy_price')}
-                onInput={setFloatFieldsValue('buy_price')}
-                value={state.buy_price === undefined ? '' : formatNumberWithCommas(state.buy_price)}
-                invalid={!!errors.buy_price}
-                disabled={updateBuyPriceAvailable ? !updateBuyPriceAvailable : updateUnavailable}
+                id="link"
+                placeholder={t('products_link')}
+                onInput={handleChange('link')}
+                value={state.link || ''}
+                invalid={!!errors.link}
+                disabled={updateUnavailable}
               />
-              {errors.buy_price && <FormFeedback>{t(errors.buy_price)}</FormFeedback>}
+              {errors.link && <FormFeedback>{t(errors.link)}</FormFeedback>}
             </FormGroup>
             <FormGroup>
-              <Label for="sell_price">{t('products_sell_price')}</Label>
+              <Label for="price">{t('products_price')}</Label>
               <Input
                 type="text"
-                id="sell_price"
-                placeholder={t('products_sell_price')}
-                onInput={setFloatFieldsValue('sell_price')}
-                value={state.sell_price === undefined ? '' : formatNumberWithCommas(state.sell_price)}
-                invalid={!!errors.sell_price}
-                disabled={updateSellPriceAvailable ? !updateSellPriceAvailable : updateUnavailable}
+                id="price"
+                placeholder={t('products_price')}
+                onInput={setFloatFieldsValue('price')}
+                value={state.price === undefined ? '' : formatNumberWithCommas(state.price)}
+                invalid={!!errors.price}
+                disabled={updateUnavailable}
               />
-              {errors.sell_price && <FormFeedback>{t(errors.sell_price)}</FormFeedback>}
+              {errors.price && <FormFeedback>{t(errors.price)}</FormFeedback>}
             </FormGroup>
             <div className={styles.buttonsActions}>
               <Button type="button" color="secondary" className={styles.goBack} onClick={goBack} size="sm">
                 <FaArrowLeft /> {t('go_back')}
               </Button>
-              {enableUpdateForm && (
+              {!updateUnavailable && (
                 <Button type="submit" color="primary" className={styles.saveButton} size="sm">
                   <FaFloppyDisk /> {t('save')}
                 </Button>
