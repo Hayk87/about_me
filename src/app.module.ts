@@ -12,8 +12,8 @@ import { SystemUserModule } from './system-user/system-user.module';
 import { AuthModule } from './auth/auth.module';
 import { StaffsModule } from './staffs/staffs.module';
 import { OfferModule } from './offer/offer.module';
+import { ProductCategoriesModule } from './product-categories/product-categories.module';
 // import { MeasurementsModule } from './measurement/measurements.module';
-// import { ProductCategoriesModule } from './product-categories/product-categories.module';
 // import { ProductsModule } from './products/products.module';
 // import { TransactionModule } from './transaction/transaction.module';
 // import { ReportsModule } from './reports/reports.module';
@@ -53,9 +53,9 @@ import { OfferModule } from './offer/offer.module';
     SystemUserModule,
     AuthModule,
     OfferModule,
+    ProductCategoriesModule,
     // TransactionModule,
     // MeasurementsModule,
-    // ProductCategoriesModule,
     // ProductsModule,
     // ReportsModule,
   ],

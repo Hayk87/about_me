@@ -10,8 +10,7 @@ import { SearchProductCategoryInterface } from './interface/search-product-categ
 export class ProductCategoriesService {
   private pageSize = 5;
   constructor(
-    @InjectRepository(ProductCategoriesEntity)
-    private productCategoriesRepository: Repository<ProductCategoriesEntity>,
+    @InjectRepository(ProductCategoriesEntity) private productCategoriesRepository: Repository<ProductCategoriesEntity>,
   ) {}
 
   async getAll(searchParams: SearchProductCategoryInterface) {
@@ -35,6 +34,15 @@ export class ProductCategoriesService {
         { title: `%${searchParams.title}%` },
       );
     }
+    if (searchParams.code) {
+      qbList.andWhere(`${alias}.code ilike :code`, {
+        code: `%${searchParams.code}%`,
+      });
+      qbCount?.andWhere(
+        `${alias}.code ilike :code`,
+        { code: `%${searchParams.code}%` },
+      );
+    }
     qbList.orderBy(`${alias}.id`, 'DESC');
     if (!searchParams.all) {
       qbList.offset(offset);
@@ -50,7 +58,7 @@ export class ProductCategoriesService {
   async createProductCategory(
     data: CreateUpdateProductCategoryDto,
   ): Promise<ProductCategoriesEntity> {
-    let item = this.productCategoriesRepository.create({ title: data.title });
+    let item = this.productCategoriesRepository.create({ title: data.title, code: data.code });
     item = await this.productCategoriesRepository.save(item);
     return item;
   }
@@ -71,6 +79,7 @@ export class ProductCategoriesService {
   ): Promise<ProductCategoriesEntity> {
     const item = await this.findProductCategoryById(id);
     item.title = data.title;
+    item.code = data.code;
     await this.productCategoriesRepository.save(item);
     return item;
   }

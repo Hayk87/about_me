@@ -7,9 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { StaffEntity } from '../staffs/staff.entity';
-// import { ProductsEntity } from '../products/products.entity';
-// import { TransactionImportEntity } from '../transaction/transaction-import.entity';
-// import { TransactionExportEntity } from '../transaction/transaction-export.entity';
+import { ProductsEntity } from '../products/products.entity';
 
 @Entity('system-user')
 export class SystemUserEntity {
@@ -65,12 +63,6 @@ export class SystemUserEntity {
   @JoinColumn({ name: 'staff_id' })
   staff: StaffEntity;
 
-  // @OneToMany(() => ProductsEntity, (product) => product.operator)
-  // order_products: ProductsEntity[];
-
-  // @OneToMany(() => TransactionImportEntity, (item) => item.operator)
-  // transaction_imports: TransactionImportEntity[];
-
-  // @OneToMany(() => TransactionExportEntity, (item) => item.operator)
-  // transaction_exports: TransactionExportEntity[];
+  @OneToMany(() => ProductsEntity, (product) => product.operator)
+  products: ProductsEntity[];
 }

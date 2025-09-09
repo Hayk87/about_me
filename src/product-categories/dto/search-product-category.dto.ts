@@ -13,6 +13,9 @@ export class SearchProductCategoryDto {
   @ApiPropertyOptional({ type: String, description: 'Title value' })
   title?: string;
 
+  @ApiPropertyOptional({ type: String, description: 'Code value' })
+  code?: string;
+
   @ApiProperty({ type: String, description: 'Page' })
   page: number;
 

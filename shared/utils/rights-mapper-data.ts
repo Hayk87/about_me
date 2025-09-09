@@ -43,22 +43,6 @@ export const rightsMapperData = {
   productUpdateOnlySellPrice: 'product/update/sell_price',
   productUpdate: 'product/update',
   productDelete: 'product/delete',
-
-  transactionImportRead: 'transaction/import/read',
-  transactionImportReadDetails: 'transaction/import/read/details',
-  transactionImportCreate: 'transaction/import/create',
-  transactionImportDelete: 'transaction/import/delete',
-  transactionImportDeleteDetails: 'transaction/import/delete/details',
-  transactionImportReadAll: 'transaction/import/read/all',
-
-  transactionExportRead: 'transaction/export/read',
-  transactionExportReadDetails: 'transaction/export/read/details',
-  transactionExportCreate: 'transaction/export/create',
-  transactionExportDelete: 'transaction/export/delete',
-  transactionExportDeleteDetails: 'transaction/export/delete/details',
-  transactionExportReadAll: 'transaction/export/read/all',
-
-  reportsPage: 'reports/page',
 }
 
 export const rightsListData = [

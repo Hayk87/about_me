@@ -4,4 +4,5 @@ export class SearchProductCategoryInterface {
   page: number;
   limit?: number;
   title?: string;
+  code?: string;
 }

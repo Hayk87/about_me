@@ -11,7 +11,7 @@ import { translationsSeed } from '../../utils/variables';
 export class SearchProductCategoryPipe implements PipeTransform {
   transform(post: any, metadata: ArgumentMetadata) {
     if (metadata.type === 'query') {
-      let { lang, title, page, limit, all } = post;
+      let { lang, title, code, page, limit, all } = post;
       const errors: Record<string, string> = {};
       if (!lang) {
         throw new BadRequestException(translationsSeed.required_field.key);
@@ -23,6 +23,9 @@ export class SearchProductCategoryPipe implements PipeTransform {
       }
       if (title && typeof title !== 'string') {
         errors.title = translationsSeed.invalid_value.key;
+      }
+      if (code && typeof code !== 'string') {
+        errors.code = translationsSeed.invalid_value.key;
       }
       if (!page) {
         errors.page = translationsSeed.required_field.key;
@@ -44,7 +47,7 @@ export class SearchProductCategoryPipe implements PipeTransform {
       if (title && typeof title === 'string') {
         title = (title as string).trim();
       }
-      return { lang, title, page, limit, all };
+      return { lang, title, code, page, limit, all };
     }
     return post;
   }
