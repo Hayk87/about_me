@@ -1,0 +1,11 @@
+.Dashboard {
+  background-color: var(--bg-color-dashboard);
+  padding: 10px;
+  height: 100vh;
+
+  .Container {
+    background-color: var(--bg-color-dashboard-container);
+    min-height: 80vh;
+    padding: 15px 15px;
+  }
+}

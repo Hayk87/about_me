@@ -1,0 +1,24 @@
+.Login {
+  width: 100%;
+  height: 100vh;
+  background-color: var(--bg-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .LoginFormContainer {
+    width: 400px;
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 0 14px var(--bg-color-bold);
+
+    .LoginForm {
+      margin-top: 35px;
+
+      .LoginFormSubmitBtn {
+        width: 100%;
+      }
+    }
+  }
+}

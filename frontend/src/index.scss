@@ -1,0 +1,21 @@
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
+:root {
+  --bg-color: #405dbdf7;
+  --bg-color-bold: #05248cf7;
+  --bg-color-dashboard: #ddd;
+  --bg-color-dashboard-container: #fff;
+  --language-switcher: #16778a;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}

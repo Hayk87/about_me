@@ -1,0 +1,11 @@
+.menuButton {
+  :global(button.btn.btn-info) {
+    background-color: var(--language-switcher);
+    border: 1px solid var(--language-switcher);
+    color: #fff;
+  }
+}
+
+.dropdownToggle {
+  background-color: #fff;
+}

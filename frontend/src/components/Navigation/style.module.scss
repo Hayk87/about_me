@@ -1,0 +1,58 @@
+.mainNavigation {
+  flex-wrap: wrap-reverse;
+  row-gap: 5px;
+  &:global(.nav) {
+    :global(.nav-item) {
+      :global(.nav-link) {
+        margin-right: 5px;
+        cursor: pointer;
+        &:not(:global(.active)) {
+          background-color: var(--bg-color);
+          color: #fff;
+        }
+        &:global(.active) {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+  .dashboardMenu {
+    :global(.nav-link) {
+      background-color: var(--language-switcher) !important;
+      color: #fff;
+    }
+  }
+  .dashboardLogoutMenu {
+    :global(.nav-link) {
+      background-color: #000 !important;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+  }
+}
+
+.navigationForWeb {
+  display: inline-block;
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 10px;
+
+    a {
+      text-decoration: none;
+      font-weight: 900;
+      font-size: 19px;
+      color: #49a4e9;
+
+      &.activeMenu {
+        text-decoration: underline;
+      }
+    }
+  }
+}

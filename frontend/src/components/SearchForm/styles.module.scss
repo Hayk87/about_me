@@ -1,0 +1,36 @@
+.searchForm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  border: 2px solid var(--bg-color-bold);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 30px;
+
+  > div {
+    width: 25%;
+    padding: 10px;
+
+    &.buttons {
+      display: flex;
+      gap: 5px;
+      align-items: flex-end;
+      padding-bottom: 14px;
+    }
+
+    :global {
+      .react-datepicker-wrapper {
+        width: 100%;
+      }
+    }
+
+    :global(.react-datepicker__input-container) {
+      input {
+        width: 100%;
+        height: 38px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+    }
+  }
+}

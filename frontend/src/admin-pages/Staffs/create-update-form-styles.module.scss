@@ -1,0 +1,20 @@
+.createUpdateForm {
+  text-align: center;
+  border: 1px solid var(--bg-color);
+  box-shadow: 0 0 5px var(--bg-color);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.buttonsActions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.goBack, .saveButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}

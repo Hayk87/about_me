@@ -1,0 +1,30 @@
+.Dashboard {
+  .systemUserData {
+    width: 700px;
+
+    .rightColumn {
+      width: 250px;
+    }
+  }
+  .caption {
+    font-weight: 900;
+  }
+  .passwordSaveContainer {
+    text-align: right;
+  }
+  .authenticatorContainer {
+    text-align: right;
+
+    input {
+      margin-right: 10px;
+    }
+
+    .code {
+      font-size: 13px;
+
+      .copy {
+        cursor: pointer;
+      }
+    }
+  }
+}
