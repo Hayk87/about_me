@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Not } from 'typeorm';
 import { ProductsEntity } from './products.entity';
 import { SystemUserEntity } from '../system-user/system-user.entity';
 import { ProductCategoriesEntity } from '../product-categories/product-categories.entity';
@@ -26,6 +26,12 @@ export class ProductsService {
     data: CreateProductInterface,
     operator_id: number,
   ): Promise<ProductsEntity> {
+    const existsProduct = await this.productsRepository.findOne({
+      where: { is_deleted: false, code: data.code },
+    });
+    if (existsProduct) {
+      throw new NotFoundException({ message: { code: translationsSeed.unique_field.key } });
+    }
     const operator = await this.systemUserRepository.findOne({
       where: { id: operator_id },
     });
@@ -149,8 +155,8 @@ export class ProductsService {
     if (!product) {
       throw new NotFoundException(translationsSeed.data_not_found.key);
     }
-    // delete product.operator?.password;
-    // delete product.operator?.secret;
+    delete product.operator?.password;
+    delete product.operator?.secret;
     return product;
   }
 
@@ -158,6 +164,12 @@ export class ProductsService {
     id: number,
     data: CreateProductInterface,
   ): Promise<ProductsEntity> {
+    const existsProduct = await this.productsRepository.findOne({
+      where: { is_deleted: false, code: data.code, id: Not(id) },
+    });
+    if (existsProduct) {
+      throw new NotFoundException({ message: { code: translationsSeed.unique_field.key } });
+    }
     const product = await this.getProductById(id, true);
     if (product.category.id !== data.category_id) {
       const category = await this.productCategoryRepository.findOne({

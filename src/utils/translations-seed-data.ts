@@ -447,32 +447,18 @@ export const translationsSeedData = {
       en: 'Quantity (from)',
     },
   },
-  buy_price_from: {
-    key: 'buy_price_from',
+  price_from: {
+    key: 'price_from',
     value: {
-      hy: 'Գնման գին (սկսած)',
-      en: 'Buy price (from)',
+      hy: 'Գին (սկսած)',
+      en: 'Price (from)',
     },
   },
-  buy_price_to: {
-    key: 'buy_price_to',
+  price_to: {
+    key: 'price_to',
     value: {
-      hy: 'Գնման գին (մինչև)',
-      en: 'Buy price (to)',
-    },
-  },
-  sell_price_from: {
-    key: 'sell_price_from',
-    value: {
-      hy: 'Վաճառքի գին (սկսած)',
-      en: 'Sell price (from)',
-    },
-  },
-  sell_price_to: {
-    key: 'sell_price_to',
-    value: {
-      hy: 'Վաճառքի գին (մինչև)',
-      en: 'Sell price (to)',
+      hy: 'Գին (մինչև)',
+      en: 'Price (to)',
     },
   },
   staff_rights: {
@@ -809,6 +795,41 @@ export const translationsSeedData = {
     value: {
       hy: 'Գնել ծրագիր',
       en: 'Buy application',
+    },
+  },
+  products_code: {
+    key: 'products_code',
+    value: {
+      hy: 'Ծրագրի կոդը',
+      en: 'Application code',
+    },
+  },
+  products_link: {
+    key: 'products_link',
+    value: {
+      hy: 'Ծրագրի հղումը',
+      en: 'Application link',
+    },
+  },
+  products_price: {
+    key: 'products_price',
+    value: {
+      hy: 'Ծրագրի գինը',
+      en: 'Application price',
+    },
+  },
+  unique_field: {
+    key: 'unique_field',
+    value: {
+      hy: 'Դաշտը պետք է լինի unique',
+      en: 'Field should be unique',
+    },
+  },
+  content: {
+    key: 'content',
+    value: {
+      hy: 'Բովանդակություն',
+      en: 'Content',
     },
   },
 };

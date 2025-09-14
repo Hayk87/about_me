@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, FormGroup, Label, Input, FormFeedback, Row, Col } from 'reactstrap';
+import { Button, ButtonGroup, Form, FormGroup, Label, Input, FormFeedback, Row, Col } from 'reactstrap';
 import queryString from "query-string";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -36,6 +36,7 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
   const [state, setState] = useState<any>({});
   const [errors, setErrors] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(false);
+  const [tab, setTab] = useState<number>(0);
   const [options, setOptions] = useState<OptionsInterface>({ category_id: [] });
   const selectedCategory = options.category_id.find((c: any) => c.value === state.category_id);
   const { t } = useTranslate();
@@ -159,10 +160,23 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
               <Input type="hidden" invalid />
               {errors.category_id && <FormFeedback>{t(errors.category_id)}</FormFeedback>}
             </FormGroup>
-            {languages.list.map(lang => (
+            <ButtonGroup className="mb-3">
+              {languages.list.map((lang, i: number) => (
+                <Button
+                  type="button"
+                  key={lang.code}
+                  color="success"
+                  outline={!(i === tab)}
+                  onClick={() => setTab(i)}
+                >
+                  {lang.name}
+                </Button>
+              ))}
+            </ButtonGroup>
+            {languages.list.map((lang, i: number) => (
               <React.Fragment key={lang.code}>
-                <FormGroup>
-                  <Label for={`title_${lang.code}`}>{`${t('naming')} (${lang.name})`}</Label>
+                <FormGroup style={i === tab ? {} : { display: 'none' }}>
+                  <Label for={`title_${lang.code}`}>{t('naming')}</Label>
                   <Input
                     type="text"
                     id={`title_${lang.code}`}
@@ -174,8 +188,8 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
                   />
                   {errors.title?.[lang.code] && <FormFeedback>{t(errors.title?.[lang.code])}</FormFeedback>}
                 </FormGroup>
-                <FormGroup>
-                  <Label for={`content_${lang.code}`}>{`${t('content')} (${lang.name})`}</Label>
+                <FormGroup style={i === tab ? {} : { display: 'none' }}>
+                  <Label for={`content_${lang.code}`}>{t('content')}</Label>
                   <Input
                     type="textarea"
                     id={`content_${lang.code}`}
