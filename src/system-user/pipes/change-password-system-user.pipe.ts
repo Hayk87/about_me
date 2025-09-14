@@ -10,7 +10,7 @@ import { translationsSeed } from '../../utils/variables';
 @Injectable()
 export class ChangePasswordSystemUserPipe implements PipeTransform {
   transform(post: any, metadata: ArgumentMetadata) {
-    let { current_password, new_password } = post;
+    let { current_password, new_password, repeat_password } = post;
     const errors: Record<string, string> = {};
     const plainData: Record<string, string> = {};
 
@@ -33,6 +33,10 @@ export class ChangePasswordSystemUserPipe implements PipeTransform {
       new_password = (new_password as string).trim();
       if (!new_password.match(passwordRegexp)) {
         errors.new_password = translationsSeed.password_invalid_format.key;
+      }
+      if (repeat_password !== new_password) {
+        errors.new_password = translationsSeed.not_equal_password.key;
+        errors.repeat_password = translationsSeed.not_equal_password.key;
       }
     }
 

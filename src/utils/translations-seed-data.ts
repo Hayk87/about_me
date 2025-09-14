@@ -608,6 +608,20 @@ export const translationsSeedData = {
       en: 'New password',
     },
   },
+  repeat_password: {
+    key: 'repeat_password',
+    value: {
+      hy: 'Կրկնել գաղտնաբառը',
+      en: 'Repeat password',
+    },
+  },
+  not_equal_password: {
+    key: 'not_equal_password',
+    value: {
+      hy: 'Գաղտնաբառերը նույնը չեն',
+      en: 'Passwords are not equal',
+    },
+  },
   enable_authenticator: {
     key: 'enable_authenticator',
     value: {

@@ -15,9 +15,10 @@ export const path: string = adminPagesPath.dashboard;
 interface PasswordStateInterface {
   current_password: string;
   new_password: string;
+  repeat_password: string;
 }
 
-const passwordState: PasswordStateInterface = { current_password: '', new_password: '' };
+const passwordState: PasswordStateInterface = { current_password: '', new_password: '', repeat_password: '' };
 
 export default function Dashboard() {
   const [passwords, setPasswords] = useState<PasswordStateInterface>({ ...passwordState });
@@ -59,9 +60,11 @@ export default function Dashboard() {
   const savePassword = () => {
     if (disablePasswordSaveButton) return;
     setSavePasswordSubmitted(true);
+    setErrorsPasswords(passwordState);
     changeSystemUserPassword(passwords)
       .then(() => {
         alertSuccess(t('successfully_saved'));
+        setPasswords(passwordState);
       })
       .catch(err => {
         if (typeof err.response.data.message === 'object') {
@@ -106,7 +109,7 @@ export default function Dashboard() {
             <td>
               <FormGroup>
                 <Input
-                  type="text"
+                  type="password"
                   value={passwords.current_password}
                   onChange={handlePassword('current_password')}
                   invalid={!!errorsPasswords.current_password}
@@ -120,12 +123,26 @@ export default function Dashboard() {
             <td>
               <FormGroup>
                 <Input
-                  type="text"
+                  type="password"
                   value={passwords.new_password}
                   onChange={handlePassword('new_password')}
                   invalid={!!errorsPasswords.new_password}
                 />
-                {errorsPasswords.current_password && <FormFeedback>{t(errorsPasswords.current_password)}</FormFeedback>}
+                {errorsPasswords.new_password && <FormFeedback>{t(errorsPasswords.new_password)}</FormFeedback>}
+              </FormGroup>
+            </td>
+          </tr>
+          <tr>
+            <td className={styles.caption}>{t('repeat_password')}</td>
+            <td>
+              <FormGroup>
+                <Input
+                  type="password"
+                  value={passwords.repeat_password}
+                  onChange={handlePassword('repeat_password')}
+                  invalid={!!errorsPasswords.repeat_password}
+                />
+                {errorsPasswords.repeat_password && <FormFeedback>{t(errorsPasswords.repeat_password)}</FormFeedback>}
               </FormGroup>
             </td>
           </tr>
