@@ -13,6 +13,14 @@ import {
 @Injectable()
 export class CreateProductPipe implements PipeTransform {
   transform(post: any, metadata: ArgumentMetadata) {
+    post.category_id = parseInt(post.category_id);
+    post.price = parseInt(post.price);
+    try {
+      post.title = JSON.parse(post.title);
+    } catch (e) {}
+    try {
+      post.content = JSON.parse(post.content);
+    } catch (e) {}
     const errors: Record<string, any> = {};
     const plainData: Record<string, any> = {};
     if (!post.code) {

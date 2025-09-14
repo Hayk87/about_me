@@ -1,7 +1,7 @@
 import React, { useState, useCallback, ChangeEvent, useMemo } from "react";
 import { Form, FormGroup, Label, Input, Button, Container, Row, Col, FormFeedback, Alert } from 'reactstrap';
 import { sendOfferToAdmin } from "../../api/requests";
-import { webPagesPath } from "../../utils";
+import { useTranslate, webPagesPath } from "../../utils";
 import WebLayout from "../../Layouts/WebLayout";
 import styles from "./styles.module.scss";
 
@@ -26,6 +26,7 @@ const MainPage = () => {
   const [formSent, setFormSent] = useState<boolean>(false);
   const [formData, setFormData] = useState<IForm>(initialFormData);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const { t } = useTranslate();
   const formIsCompleted = useMemo(() => !!formData.name && !!formData.email && !!formData.content, [formData.name, formData.email, formData.content]);
 
   const handleChange = useCallback((key: keyof IForm) =>
@@ -245,7 +246,7 @@ const MainPage = () => {
                         accept={"image/jpeg,image/png,application/pdf,application/vnd.ms-excel"}
                         invalid={!!errors.files}
                       />
-                      {errors.files && <FormFeedback>{errors.files}</FormFeedback>}
+                      {errors.files && <FormFeedback>{t(errors.files)}</FormFeedback>}
                     </FormGroup>
                     <Button type="submit" color="primary" disabled={!formIsCompleted} block>Submit</Button>
                   </Form>

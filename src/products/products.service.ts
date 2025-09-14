@@ -24,6 +24,7 @@ export class ProductsService {
 
   async createProduct(
     data: CreateProductInterface,
+    files: Array<Express.Multer.File> = [],
     operator_id: number,
   ): Promise<ProductsEntity> {
     const existsProduct = await this.productsRepository.findOne({

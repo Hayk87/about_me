@@ -8,9 +8,9 @@ import {
   ParseIntPipe,
   Post,
   Put,
-  Query,
-  UseGuards,
-} from '@nestjs/common';
+  Query, UploadedFiles,
+  UseGuards, UseInterceptors
+} from "@nestjs/common";
 import { ProductsService } from './products.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { SystemUserGuard } from '../system-user/system-user.guard';
@@ -20,6 +20,7 @@ import {
 } from '../system-user/system-user.decorator';
 import { rightsMapper, translationsSeed } from '../utils/variables';
 import { ApiHeader, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { FilesInterceptor } from "@nestjs/platform-express";
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductsEntity } from './products.entity';
 import { SearchProductDto } from './dto/search-product.dto';
@@ -51,12 +52,14 @@ export class ProductsController {
   @SystemUserMetaRights(rightsMapper.productCreate)
   @UseGuards(AuthGuard, SystemUserGuard)
   @ApiOkResponse({ type: Object, isArray: false })
+  @UseInterceptors(FilesInterceptor('files'))
   @Post()
   createProductItem(
+    @UploadedFiles(pipes.ProductFilePipe) files: Array<Express.Multer.File>,
     @Body(pipes.CreateProductPipe) data: CreateProductDto,
     @SystemUser() user,
   ): Promise<ProductsEntity> {
-    return this.productsService.createProduct(data, user.id);
+    return this.productsService.createProduct(data, files, user.id);
   }
 
   @SystemUserMetaRights(rightsMapper.productReadDetails)

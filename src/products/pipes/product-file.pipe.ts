@@ -7,8 +7,8 @@ import {
 import { translationsSeed } from "../../utils/variables";
 
 @Injectable()
-export class OfferFilePipe implements PipeTransform {
-  allowedTypes = ['image/jpeg', 'image/png', 'application/pdf', 'application/vnd.ms-excel'];
+export class ProductFilePipe implements PipeTransform {
+  allowedTypes = ['image/jpeg', 'image/png'];
 
   transform(files: any, metadata: ArgumentMetadata) {
     const errors: Record<string, any> = {};

@@ -70,6 +70,15 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
     setErrors((prev: any) => ({ ...prev, [key]: '' }));
   }
 
+  const handleFilesChange = (ev: any) => {
+    const { files } = ev.target;
+    const filesData: any = [];
+    for (const file of files) {
+      filesData.push(file);
+    }
+    setState((prev: any) => ({ ...prev, files: filesData }));
+  }
+
   const handleOption = (key: string) => (option: any) => {
     setState((prev: any) => ({ ...prev, [key]: option?.value }));
     setErrors((prev: any) => ({ ...prev, [key]: '' }));
@@ -86,10 +95,19 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
     setLoading(true);
     setErrors({});
     let promise = null;
+    const send = new FormData();
+    send.append('category_id', state.category_id);
+    send.append('code', state.code);
+    send.append('title', JSON.stringify(state.title));
+    send.append('content', JSON.stringify(state.content));
+    send.append('price', state.price);
+    for (const file of state.files) {
+      send.append('files', file);
+    }
     if (id) {
-      promise = updateProduct(id, state);
+      promise = updateProduct(id, send);
     } else {
-      promise = createProduct(state);
+      promise = createProduct(send);
     }
     promise
       .then(() => {
@@ -241,6 +259,19 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
                 disabled={updateUnavailable}
               />
               {errors.price && <FormFeedback>{t(errors.price)}</FormFeedback>}
+            </FormGroup>
+            <FormGroup>
+              <Label for="files">Files: <small>(Please choose jpeg, jpg, png files up to 10MB each one)</small></Label>
+              <Input
+                type="file"
+                name="files"
+                id="files"
+                onChange={handleFilesChange}
+                multiple={true}
+                accept={"image/jpeg,image/png"}
+                invalid={!!errors.files}
+              />
+              {errors.files && <FormFeedback>{t(errors.files)}</FormFeedback>}
             </FormGroup>
             <div className={styles.buttonsActions}>
               <Button type="button" color="secondary" className={styles.goBack} onClick={goBack} size="sm">
