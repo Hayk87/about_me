@@ -5,9 +5,13 @@ import {
   ManyToOne,
   JoinColumn,
   UpdateDateColumn,
-} from 'typeorm';
+  ManyToMany,
+  OneToOne,
+  JoinTable
+} from "typeorm";
 import { ProductCategoriesEntity } from '../product-categories/product-categories.entity';
 import { SystemUserEntity } from '../system-user/system-user.entity';
+import { FilesEntity } from "../files/files.entity";
 
 @Entity('products')
 export class ProductsEntity {
@@ -53,4 +57,25 @@ export class ProductsEntity {
     default: () => 'CURRENT_TIMESTAMP',
   })
   updated_at: Date;
+
+  @OneToOne(() => FilesEntity)
+  @JoinColumn({ name: 'main_photo_id' })
+  mainPhoto: FilesEntity
+
+  @ManyToMany(() => FilesEntity, (files) => files.products,  {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+  })
+  @JoinTable({
+    name: 'product_files',
+    joinColumn: {
+      name: 'product_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'file_id',
+      referencedColumnName: 'id',
+    },
+  })
+  files: FilesEntity[];
 }

@@ -6,6 +6,7 @@ import { ProductsEntity } from './products.entity';
 import { ProductCategoriesEntity } from '../product-categories/product-categories.entity';
 import { SystemUserEntity } from '../system-user/system-user.entity';
 import { AuthModule } from '../auth/auth.module';
+import { FilesModule } from "../files/files.module";
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { AuthModule } from '../auth/auth.module';
       SystemUserEntity,
     ]),
     AuthModule,
+    FilesModule,
   ],
   controllers: [ProductsController],
   providers: [ProductsService],

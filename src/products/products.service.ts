@@ -5,13 +5,14 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Not } from 'typeorm';
+import { Repository, Not, DataSource } from 'typeorm';
 import { ProductsEntity } from './products.entity';
 import { SystemUserEntity } from '../system-user/system-user.entity';
 import { ProductCategoriesEntity } from '../product-categories/product-categories.entity';
 import { rightsMapper, translationsSeed } from '../utils/variables';
 import { CreateProductInterface } from './interface/create-product.interface';
 import { checkPermission } from '../utils/functions';
+import { FilesService } from "../files/files.service";
 
 @Injectable()
 export class ProductsService {
@@ -20,6 +21,8 @@ export class ProductsService {
     @InjectRepository(ProductsEntity) private productsRepository: Repository<ProductsEntity>,
     @InjectRepository(SystemUserEntity) private systemUserRepository: Repository<SystemUserEntity>,
     @InjectRepository(ProductCategoriesEntity) private productCategoryRepository: Repository<ProductCategoriesEntity>,
+    private readonly filesService: FilesService,
+    private dataSource: DataSource,
   ) {}
 
   async createProduct(
@@ -27,38 +30,75 @@ export class ProductsService {
     files: Array<Express.Multer.File> = [],
     operator_id: number,
   ): Promise<ProductsEntity> {
-    const existsProduct = await this.productsRepository.findOne({
-      where: { is_deleted: false, code: data.code },
-    });
-    if (existsProduct) {
-      throw new NotFoundException({ message: { code: translationsSeed.unique_field.key } });
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    const savedFiles = [];
+    try {
+      const existsProduct = await queryRunner.manager.getRepository(ProductsEntity).findOne(
+        {
+          where: {
+            is_deleted: false,
+            code: data.code
+          }
+        }
+      );
+      if (existsProduct) {
+        throw new NotFoundException({ message: { code: translationsSeed.unique_field.key } });
+      }
+      const operator = await queryRunner.manager.getRepository(SystemUserEntity).findOne(
+        {
+          where: { id: operator_id },
+        }
+      );
+      if (!operator) {
+        throw new BadRequestException(translationsSeed.user_not_found.key);
+      }
+      const category = await queryRunner.manager.getRepository(ProductCategoriesEntity).findOne(
+        {
+          where: { id: data.category_id },
+        }
+      );
+      if (!category) {
+        throw new BadRequestException(translationsSeed.data_not_found.key);
+      }
+      const product = await queryRunner.manager.getRepository(ProductsEntity).create({
+        code: data.code,
+        link: data.link || null,
+        title: data.title,
+        content: data.content,
+        price: data.price,
+        operator,
+        category,
+        is_deleted: false,
+      });
+      const fileNameGeneral = Date.now();
+      let i = 0;
+      await queryRunner.manager.getRepository(ProductsEntity).save(product);
+      for (const file of files) {
+        const fileNameParams = file.originalname.split('.');
+        const ext = fileNameParams[fileNameParams.length - 1];
+        file.originalname = `${fileNameGeneral + i}.${ext}`;
+        const savedFile = await this.filesService.storeFile(file, ['products', product.id.toString()], queryRunner.manager);
+        savedFiles.push(savedFile);
+        i += 1;
+      }
+      product.files = savedFiles;
+      product.mainPhoto = savedFiles[0] || null;
+      await queryRunner.manager.getRepository(ProductsEntity).save(product);
+      delete product.operator.password;
+      delete product.operator.secret;
+      await queryRunner.commitTransaction();
+      return product;
+    } catch (err) {
+      for await (const file of savedFiles) {
+        await this.filesService.unlinkFile(file);
+      }
+      await queryRunner.rollbackTransaction();
+      throw err;
+    } finally {
+      await queryRunner.release();
     }
-    const operator = await this.systemUserRepository.findOne({
-      where: { id: operator_id },
-    });
-    if (!operator) {
-      throw new BadRequestException(translationsSeed.user_not_found.key);
-    }
-    const category = await this.productCategoryRepository.findOne({
-      where: { id: data.category_id },
-    });
-    if (!category) {
-      throw new BadRequestException(translationsSeed.data_not_found.key);
-    }
-    const product = this.productsRepository.create({
-      code: data.code,
-      link: data.link || null,
-      title: data.title,
-      content: data.content,
-      price: data.price,
-      operator,
-      category,
-      is_deleted: false,
-    });
-    await this.productsRepository.save(product);
-    delete product.operator.password;
-    delete product.operator.secret;
-    return product;
   }
 
   async getProducts(
@@ -151,6 +191,8 @@ export class ProductsService {
       relations: {
         category: withRelations,
         operator: withRelations,
+        mainPhoto: withRelations,
+        files: withRelations,
       },
     });
     if (!product) {

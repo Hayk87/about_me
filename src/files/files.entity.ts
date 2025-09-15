@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from "typeorm";
 import { OfferEntity } from "../offer/offer.entity";
+import { ProductsEntity } from "../products/products.entity";
 
 @Entity('files')
 export class FilesEntity {
@@ -23,4 +24,10 @@ export class FilesEntity {
     onUpdate: 'CASCADE'
   })
   offers: OfferEntity[];
+
+  @ManyToMany(() => ProductsEntity, (products) => products.files, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE'
+  })
+  products: ProductsEntity[];
 }

@@ -65,6 +65,16 @@ export class FilesService {
     return (await this.saveFile(fileData, manager));
   }
 
+  async unlinkFile(file: FilesEntity) {
+    const filePathArgs = [__dirname, '..', '..', 'uploads'];
+    if (file.directory) {
+      filePathArgs.push(file.directory)
+    }
+    filePathArgs.push(file.name);
+    const filePath = path.join(...filePathArgs);
+    fs.unlink(filePath, () => {});
+  }
+
   async streamFile(id: string, disposition: boolean) {
     const file = await this.filesRepository.findOne({ where: { id } });
     if (!file) {

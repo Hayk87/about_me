@@ -101,7 +101,7 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
     send.append('title', JSON.stringify(state.title));
     send.append('content', JSON.stringify(state.content));
     send.append('price', state.price);
-    for (const file of state.files) {
+    for (const file of (state.files || [])) {
       send.append('files', file);
     }
     if (id) {
