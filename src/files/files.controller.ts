@@ -26,8 +26,8 @@ export class FilesController {
     description: 'Need auth token',
     required: true,
   })
-  @SystemUserMetaRights(rightsMapper.fileReadDetails)
-  @UseGuards(AuthGuard, SystemUserGuard)
+  // @SystemUserMetaRights(rightsMapper.fileReadDetails)
+  // @UseGuards(AuthGuard, SystemUserGuard)
   @Get('details/:id')
   getFileDetails(
     @Param(

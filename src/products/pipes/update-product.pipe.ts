@@ -11,7 +11,7 @@ import {
 } from '../../utils/variables';
 
 @Injectable()
-export class CreateProductPipe implements PipeTransform {
+export class UpdateProductPipe implements PipeTransform {
   transform(post: any, metadata: ArgumentMetadata) {
     post.category_id = parseInt(post.category_id);
     post.price = parseInt(post.price);
@@ -20,6 +20,9 @@ export class CreateProductPipe implements PipeTransform {
     } catch (e) {}
     try {
       post.content = JSON.parse(post.content);
+    } catch (e) {}
+    try {
+      post.removedFiles = JSON.parse(post.removedFiles);
     } catch (e) {}
     const errors: Record<string, any> = {};
     const plainData: Record<string, any> = {};
@@ -63,6 +66,11 @@ export class CreateProductPipe implements PipeTransform {
           [lang.code]: post.content?.[lang.code],
         };
       }
+    }
+    if (post.removedFiles.some(item => typeof item !== 'string')) {
+      throw new BadRequestException(translationsSeed.invalid_value.key);
+    } else {
+      plainData.removedFiles = post.removedFiles;
     }
     if (post.category_id === undefined) {
       errors.category_id = translationsSeed.required_field.key;

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, StreamableFile } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException, StreamableFile } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { EntityManager, Repository } from "typeorm";
 import * as fs from "fs";
@@ -63,6 +63,11 @@ export class FilesService {
   async storeFile(file: IFile, directory?: string[], manager?: EntityManager): Promise<FilesEntity> {
     const fileData = await this.uploadFile(file, directory);
     return (await this.saveFile(fileData, manager));
+  }
+
+  async removeFile(file: FilesEntity, manager?: EntityManager) {
+    const repo = manager ? manager.getRepository(FilesEntity) : this.filesRepository;
+    await repo.remove(file);
   }
 
   async unlinkFile(file: FilesEntity) {

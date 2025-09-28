@@ -25,6 +25,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { ProductsEntity } from './products.entity';
 import { SearchProductDto } from './dto/search-product.dto';
 import { ListResponseDto } from './dto/list-response.dto';
+import { UpdateProductDto } from "./dto/update-product.dto";
 import * as pipes from './pipes';
 
 @ApiTags('Products')
@@ -85,6 +86,7 @@ export class ProductsController {
   )
   @UseGuards(AuthGuard, SystemUserGuard)
   @ApiOkResponse({ type: Object, isArray: false })
+  @UseInterceptors(FilesInterceptor('files'))
   @Put(':id')
   updateProductItem(
     @Param(
@@ -96,9 +98,10 @@ export class ProductsController {
       }),
     )
     id: number,
-    @Body(pipes.CreateProductPipe) data: CreateProductDto,
+    @Body(pipes.UpdateProductPipe) data: UpdateProductDto,
+    @UploadedFiles(pipes.ProductFilePipe) files: Array<Express.Multer.File>,
   ): Promise<ProductsEntity> {
-    return this.productsService.updateProduct(id, data);
+    return this.productsService.updateProduct(id, data, files);
   }
 
   @SystemUserMetaRights(rightsMapper.productDelete)

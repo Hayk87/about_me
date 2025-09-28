@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import Select from 'react-select';
 import { FaArrowLeft, FaFloppyDisk } from "react-icons/fa6";
 import Loading from "../../components/Loading";
+import { CloseIcon } from "../../components/Icons";
 import {
   applicationBaseURL,
   useTranslate,
@@ -25,9 +26,18 @@ import { RootState } from "../../store";
 import { useToast } from "../../hooks";
 import styles from "./create-update-form-styles.module.scss";
 import { ProductsCategoriesSearchInterface } from "../../interfaces";
+import { productsDetailsId } from "../../utils/admin-pages-path";
 
 interface CreateUpdateFormInterface {
   id?: string;
+}
+
+interface IFile {
+  id: string;
+  name: string;
+  type: string;
+  directory: string;
+  size: number;
 }
 
 interface OptionsInterface { category_id: { value: number, title: string }[] }
@@ -35,6 +45,7 @@ interface OptionsInterface { category_id: { value: number, title: string }[] }
 const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement => {
   const [state, setState] = useState<any>({});
   const [errors, setErrors] = useState<any>({});
+  const [removedFiles, setRemovedFiles] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [tab, setTab] = useState<number>(0);
   const [options, setOptions] = useState<OptionsInterface>({ category_id: [] });
@@ -89,6 +100,35 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
     navigate(`/${applicationBaseURL}/${adminPagesPath.products}${searchStr ? `?${searchStr}` : ''}`);
   }
 
+  const removeFile = (file: IFile) => () => {
+    setRemovedFiles(prev => ([ ...prev, file.id ]));
+  }
+
+  const initializeProduct = () => {
+    if (id) {
+      setLoading(true);
+      getProductById(id)
+        .then(res => {
+          setState({
+            title: res.data.title,
+            content: res.data.content,
+            category_id: res.data.category?.id,
+            code: res.data.code,
+            link: res.data.link,
+            price: res.data.price,
+            existsFiles: res.data.files,
+          });
+        })
+        .catch(err => {
+          console.log(err.response.data.message);
+          alertError(`${err.response.data.statusCode}: ${t(err.response.data.message)}`);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }
+
   const handleSave = (ev: any) => {
     ev.preventDefault();
     if (updateUnavailable) return;
@@ -105,13 +145,19 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
       send.append('files', file);
     }
     if (id) {
+      send.append('removedFiles', JSON.stringify(removedFiles));
       promise = updateProduct(id, send);
     } else {
       promise = createProduct(send);
     }
     promise
-      .then(() => {
+      .then((res) => {
         alertSuccess(t('successfully_saved'));
+        if (!id) {
+          navigate(`/${applicationBaseURL}/${adminPagesPath.productsDetailsId.replace(':id', res.data.id)}`);
+        } else {
+          initializeProduct();
+        }
       })
       .catch(err => {
         if (typeof err.response.data.message === 'object') {
@@ -119,30 +165,12 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
         } else {
           alertError(`${err.response.data.statusCode}: ${t(err.response.data.message)}`);
         }
-      })
-      .finally(() => setLoading(false));
+        setLoading(false);
+      });
   }
 
   useEffect(() => {
-    if (id) {
-      setLoading(true);
-      getProductById(id)
-        .then(res => {
-          setState({
-            title: res.data.title,
-            content: res.data.content,
-            category_id: res.data.category?.id,
-            code: res.data.code,
-            link: res.data.link,
-            price: res.data.price,
-          });
-        })
-        .catch(err => {
-          console.log(err.response.data.message);
-          alertError(`${err.response.data.statusCode}: ${t(err.response.data.message)}`);
-        })
-        .finally(() => setLoading(false));
-    }
+    initializeProduct();
   }, []);
 
   useEffect(() => {
@@ -273,6 +301,23 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
               />
               {errors.files && <FormFeedback>{t(errors.files)}</FormFeedback>}
             </FormGroup>
+            {id && state.existsFiles && (
+              <div className={styles.productFiles}>
+                {state.existsFiles
+                  .filter((file: IFile) => !removedFiles.includes(file.id))
+                  .map((file: IFile) => {
+                    const url = `${process.env.REACT_APP_UPLOADED_FILES_BASE_URL || ''}/api/files/details/${file.id}`;
+                    return (
+                      <div key={file.id} className={styles.productFile}>
+                        <a href={url} target="_blank">
+                          <img src={url} alt={file.name} title={file.name} width={150} />
+                        </a>
+                        <span className={styles.remove} onClick={removeFile(file)}><CloseIcon /></span>
+                      </div>
+                    );
+                })}
+              </div>
+            )}
             <div className={styles.buttonsActions}>
               <Button type="button" color="secondary" className={styles.goBack} onClick={goBack} size="sm">
                 <FaArrowLeft /> {t('go_back')}

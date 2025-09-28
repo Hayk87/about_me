@@ -21,7 +21,7 @@ export class OfferService {
       const subDir = Date.now().toString();
       const savedFiles = [];
       for (const file of files) {
-        const savedFile = await this.filesService.storeFile(file, [data.email, subDir], manager);
+        const savedFile = await this.filesService.storeFile(file, ['offers', data.email, subDir], manager);
         savedFiles.push(savedFile);
       }
       const offer = manager.create(OfferEntity, {

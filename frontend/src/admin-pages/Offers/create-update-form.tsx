@@ -116,13 +116,14 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
             {state.files?.length > 0 && (
               <div className={styles.filesContainer}>
                 {state.files?.map(file => (
-                  <Badge
-                    key={file.id}
-                    color="success"
-                    onClick={showFile(file.id)}
-                  >
-                    {file.name}
-                  </Badge>
+                  <a href={`${process.env.REACT_APP_UPLOADED_FILES_BASE_URL || ''}/api/files/details/${file.id}`} target="_blank" key={file.id}>
+                    <Badge
+                      color="success"
+                      // onClick={showFile(file.id)}
+                    >
+                      {file.name}
+                    </Badge>
+                  </a>
                 ))}
               </div>
             )}

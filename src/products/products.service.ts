@@ -13,6 +13,7 @@ import { rightsMapper, translationsSeed } from '../utils/variables';
 import { CreateProductInterface } from './interface/create-product.interface';
 import { checkPermission } from '../utils/functions';
 import { FilesService } from "../files/files.service";
+import { UpdateProductInterface } from "./interface/update-product.interface";
 
 @Injectable()
 export class ProductsService {
@@ -205,29 +206,81 @@ export class ProductsService {
 
   async updateProduct(
     id: number,
-    data: CreateProductInterface,
-  ): Promise<ProductsEntity> {
-    const existsProduct = await this.productsRepository.findOne({
-      where: { is_deleted: false, code: data.code, id: Not(id) },
-    });
-    if (existsProduct) {
-      throw new NotFoundException({ message: { code: translationsSeed.unique_field.key } });
-    }
-    const product = await this.getProductById(id, true);
-    if (product.category.id !== data.category_id) {
-      const category = await this.productCategoryRepository.findOne({
-        where: { id: data.category_id },
-      });
+    data: UpdateProductInterface,
+    files: Array<Express.Multer.File> = [],
+  ): Promise<any> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    const savedFiles = [];
+    try {
+      const existsProduct = await queryRunner.manager.getRepository(ProductsEntity).findOne(
+        {
+          where: {
+            is_deleted: false,
+            code: data.code,
+            id: Not(id)
+          }
+        }
+      );
+      if (existsProduct) {
+        throw new NotFoundException({ message: { code: translationsSeed.unique_field.key } });
+      }
+      const category = await queryRunner.manager.getRepository(ProductCategoriesEntity).findOne(
+        {
+          where: { id: data.category_id, is_deleted: false },
+        }
+      );
       if (!category) {
         throw new BadRequestException(translationsSeed.data_not_found.key);
       }
+      const product = await queryRunner.manager.getRepository(ProductsEntity).findOne(
+        {
+          where: { id, is_deleted: false },
+          relations: {
+            files: true,
+          },
+        }
+      );
+      product.title = data.title;
+      product.price = data.price;
+      product.code = data.code;
+      product.link = data.link || null;
       product.category = category;
+      const existsFiles = product.files.filter(item => !data.removedFiles.includes(item.id));
+      const removedFilesData = product.files.filter(item => data.removedFiles.includes(item.id));
+      const fileNameGeneral = Date.now();
+      let i = 0;
+      for (const file of files) {
+        const fileNameParams = file.originalname.split('.');
+        const ext = fileNameParams[fileNameParams.length - 1];
+        file.originalname = `${fileNameGeneral + i}.${ext}`;
+        const savedFile = await this.filesService.storeFile(file, ['products', product.id.toString()], queryRunner.manager);
+        savedFiles.push(savedFile);
+        i += 1;
+      }
+      product.files = [...existsFiles, ...savedFiles];
+      product.mainPhoto = product.files[0] || null;
+      await queryRunner.manager.getRepository(ProductsEntity).save(product);
+      // remove file from DB before commit, it failed we will not unlink file
+      for await (const file of removedFilesData) {
+        await this.filesService.removeFile(file, queryRunner.manager);
+      }
+      await queryRunner.commitTransaction();
+      // removable files should remove after transaction successfully commit
+      for await (const file of removedFilesData) {
+        await this.filesService.unlinkFile(file);
+      }
+      return product;
+    } catch (err) {
+      for await (const file of savedFiles) {
+        await this.filesService.unlinkFile(file);
+      }
+      await queryRunner.rollbackTransaction();
+      throw err;
+    } finally {
+      await queryRunner.release();
     }
-    product.title = data.title;
-    product.price = data.price;
-    product.code = data.code;
-    product.link = data.link || null;
-    return await this.productsRepository.save(product);
   }
 
   async deleteProduct(id: number): Promise<void> {

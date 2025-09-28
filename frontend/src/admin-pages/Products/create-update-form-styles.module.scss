@@ -4,6 +4,29 @@
   box-shadow: 0 0 5px var(--bg-color);
   border-radius: 8px;
   padding: 10px;
+
+  .productFiles {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    row-gap: 15px;
+    margin-bottom: 30px;
+
+    .productFile {
+      position: relative;
+
+      span.remove {
+        position: absolute;
+        top: -19px;
+        right: -13px;
+        font-size: 22px;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+  }
 }
 
 .buttonsActions {
