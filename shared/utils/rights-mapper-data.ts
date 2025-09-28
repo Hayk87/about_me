@@ -22,13 +22,6 @@ export const rightsMapperData = {
 
   offerRead: 'offer/read',
   offerReadDetails: 'offer/read/details',
-  fileReadDetails: 'file/read/details',
-
-  measurementRead: 'measurement/read',
-  measurementReadDetails: 'measurement/read/details',
-  measurementCreate: 'measurement/create',
-  measurementUpdate: 'measurement/update',
-  measurementDelete: 'measurement/delete',
 
   productCategoriesRead: 'productCategories/read',
   productCategoriesReadDetails: 'productCategories/read/details',
@@ -46,6 +39,78 @@ export const rightsMapperData = {
 }
 
 export const rightsListData = [
+  {
+    code: rightsMapperData.translateRead,
+    title: {
+      hy: 'Դիտել թարգմանությունների ցանկը',
+      en: 'Translations list view'
+    }
+  },
+  {
+    code: rightsMapperData.translateReadDetails,
+    title: {
+      hy: 'Դիտել թարգմանության ամբողջական ինֆորմացիան',
+      en: 'View translation details'
+    }
+  },
+  {
+    code: rightsMapperData.translateCreate,
+    title: {
+      hy: 'Ստեղծել նոր թարգմանություն',
+      en: 'Create new translation'
+    }
+  },
+  {
+    code: rightsMapperData.translateUpdate,
+    title: {
+      hy: 'Խմբագրել թարգմանությունը',
+      en: 'Update translation'
+    }
+  },
+  {
+    code: rightsMapperData.translateDelete,
+    title: {
+      hy: 'Ջնջել թարգմանությունը',
+      en: 'Delete translation'
+    }
+  },
+
+  {
+    code: rightsMapperData.staffRead,
+    title: {
+      hy: 'Դիտել պաշտոնների ցանկը',
+      en: 'Staffs list view'
+    }
+  },
+  {
+    code: rightsMapperData.staffReadDetails,
+    title: {
+      hy: 'Դիտել պաշտոնի ամբողջական ինֆորմացիան',
+      en: 'View staff details'
+    }
+  },
+  {
+    code: rightsMapperData.staffCreate,
+    title: {
+      hy: 'Ստեղծել նոր պաշտոն',
+      en: 'Create new staff'
+    }
+  },
+  {
+    code: rightsMapperData.staffUpdate,
+    title: {
+      hy: 'Խմբագրել պաշտոնը',
+      en: 'Update staff'
+    }
+  },
+  {
+    code: rightsMapperData.staffDelete,
+    title: {
+      hy: 'Ջնջել պաշտոնը',
+      en: 'Delete staff'
+    }
+  },
+
   {
     code: rightsMapperData.systemUserRead,
     title: {
@@ -88,193 +153,90 @@ export const rightsListData = [
       en: 'Block system user'
     }
   },
+
   {
-    code: rightsMapperData.staffRead,
+    code: rightsMapperData.offerRead,
     title: {
-      hy: 'Դիտել պաշտոնների ցանկը',
-      en: 'Staffs list view'
+      hy: 'Դիտել առաջարկները',
+      en: 'Offers list view'
     }
   },
   {
-    code: rightsMapperData.staffReadDetails,
+    code: rightsMapperData.offerReadDetails,
     title: {
-      hy: 'Դիտել պաշտոնի ամբողջական ինֆորմացիան',
-      en: 'View staff details'
+      hy: 'Դիտել առաջարկի ամբողջական ինֆորմացիան',
+      en: 'View offer details'
     }
   },
-  {
-    code: rightsMapperData.staffCreate,
-    title: {
-      hy: 'Ստեղծել նոր պաշտոն',
-      en: 'Create new staff'
-    }
-  },
-  {
-    code: rightsMapperData.staffUpdate,
-    title: {
-      hy: 'Խմբագրել պաշտոնը',
-      en: 'Update staff'
-    }
-  },
-  {
-    code: rightsMapperData.staffDelete,
-    title: {
-      hy: 'Ջնջել պաշտոնը',
-      en: 'Delete staff'
-    }
-  },
-  {
-    code: rightsMapperData.translateRead,
-    title: {
-      hy: 'Դիտել թարգմանությունների ցանկը',
-      en: 'Translations list view'
-    }
-  },
-  {
-    code: rightsMapperData.translateReadDetails,
-    title: {
-      hy: 'Դիտել թարգմանության ամբողջական ինֆորմացիան',
-      en: 'View translation details'
-    }
-  },
-  {
-    code: rightsMapperData.translateCreate,
-    title: {
-      hy: 'Ստեղծել նոր թարգմանություն',
-      en: 'Create new translation'
-    }
-  },
-  {
-    code: rightsMapperData.translateUpdate,
-    title: {
-      hy: 'Խմբագրել թարգմանությունը',
-      en: 'Update translation'
-    }
-  },
-  {
-    code: rightsMapperData.translateDelete,
-    title: {
-      hy: 'Ջնջել թարգմանությունը',
-      en: 'Delete translation'
-    }
-  },
-  {
-    code: rightsMapperData.measurementRead,
-    title: {
-      hy: 'Դիտել չափման միավորների ցանկը',
-      en: 'Measurements list view'
-    }
-  },
-  {
-    code: rightsMapperData.measurementReadDetails,
-    title: {
-      hy: 'Դիտել չափման միավորի ամբողջական ինֆորմացիան',
-      en: 'View measurement details'
-    }
-  },
-  {
-    code: rightsMapperData.measurementCreate,
-    title: {
-      hy: 'Ստեղծել նոր չափման միավոր',
-      en: 'Create new measurement'
-    }
-  },
-  {
-    code: rightsMapperData.measurementUpdate,
-    title: {
-      hy: 'Խմբագրել չափման միավորը',
-      en: 'Update measurement'
-    }
-  },
-  {
-    code: rightsMapperData.measurementDelete,
-    title: {
-      hy: 'Ջնջել չափման միավորը',
-      en: 'Delete measurement'
-    }
-  },
+
   {
     code: rightsMapperData.productCategoriesRead,
     title: {
-      hy: 'Դիտել ապրանքացանկի կատեգորիաների ցանկը',
-      en: 'Products categories list view'
+      hy: 'Դիտել ծրագրերի կատեգորիաների ցանկը',
+      en: 'Apps categories list view'
     }
   },
   {
     code: rightsMapperData.productCategoriesReadDetails,
     title: {
-      hy: 'Դիտել ապրանքացանկի կատեգորիաի ամբողջական ինֆորմացիան',
-      en: 'View product category details'
+      hy: 'Դիտել ծրագրի կատեգորիաի ամբողջական ինֆորմացիան',
+      en: 'View App category details'
     }
   },
   {
     code: rightsMapperData.productCategoriesCreate,
     title: {
-      hy: 'Ստեղծել նոր ապրանքացանկի կատեգորիա',
-      en: 'Create new product category'
+      hy: 'Ստեղծել նոր ծրագրի կատեգորիա',
+      en: 'Create new App category'
     }
   },
   {
     code: rightsMapperData.productCategoriesUpdate,
     title: {
-      hy: 'Խմբագրել ապրանքացանկի կատեգորիան',
-      en: 'Update product category'
+      hy: 'Խմբագրել ծրագրի կատեգորիան',
+      en: 'Update App category'
     }
   },
   {
     code: rightsMapperData.productCategoriesDelete,
     title: {
-      hy: 'Ջնջել ապրանքացանկի կատեգորիան',
-      en: 'Delete product category'
+      hy: 'Ջնջել ծրագրի կատեգորիան',
+      en: 'Delete App category'
     }
   },
   {
     code: rightsMapperData.productRead,
     title: {
-      hy: 'Դիտել ապրանքացանկը',
-      en: 'Products list view'
+      hy: 'Դիտել ծրագրերը',
+      en: 'Apps list view'
     }
   },
   {
     code: rightsMapperData.productReadDetails,
     title: {
-      hy: 'Դիտել ապրանքացանկի ամբողջական ինֆորմացիան',
-      en: 'View product details'
+      hy: 'Դիտել ծրագրի ամբողջական ինֆորմացիան',
+      en: 'View App details'
     }
   },
   {
     code: rightsMapperData.productCreate,
     title: {
-      hy: 'Ստեղծել նոր ապրանքացանկ',
-      en: 'Create new product'
-    }
-  },
-  {
-    code: rightsMapperData.productUpdateOnlyBuyPrice,
-    title: {
-      hy: 'Խմբագրել ապրանքացանկի գնման գինը',
-      en: 'Update product buy price'
-    }
-  },
-  {
-    code: rightsMapperData.productUpdateOnlySellPrice,
-    title: {
-      hy: 'Խմբագրել ապրանքացանկի վաճառքի գինը',
-      en: 'Update product sell price'
+      hy: 'Ստեղծել նոր ծրագիր',
+      en: 'Create new App'
     }
   },
   {
     code: rightsMapperData.productUpdate,
     title: {
-      hy: 'Խմբագրել ապրանքացանկը',
-      en: 'Update product'
+      hy: 'Խմբագրել ծրագիրը',
+      en: 'Update App'
     }
   },
   {
     code: rightsMapperData.productDelete,
     title: {
-      hy: 'Ջնջել ապրանքացանկը',
-      en: 'Delete product'
+      hy: 'Ջնջել ծրագիրը',
+      en: 'Delete App'
     }
   },
 ];
