@@ -131,6 +131,7 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
                 value={rightsSelected}
                 placeholder={t('staff_rights')}
                 isDisabled={updateUnavailable}
+                closeMenuOnSelect={false}
                 isMulti
               />
               <Input type="hidden" invalid />
