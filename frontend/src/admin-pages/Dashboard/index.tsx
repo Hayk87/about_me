@@ -86,6 +86,7 @@ export default function Dashboard() {
 
   return (
     <div className={styles.Dashboard}>
+      <h1>{t('dashboard')}</h1>
       <Table className={styles.systemUserData} bordered>
         <tbody>
           <tr>

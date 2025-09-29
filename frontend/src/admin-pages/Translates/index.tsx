@@ -119,6 +119,7 @@ export default function Page() {
   return (
     <>
       <div className={styles.mainContainer}>
+        <h1>{t('translates')}</h1>
         <div className={styles.btns}>
           {checkPermission(profile.data, rightsMapperData.translateCreate) && (
             <Button type="button" color="success" size="sm" onClick={addNewItem}>

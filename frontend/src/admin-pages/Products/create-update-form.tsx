@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, ButtonGroup, Form, FormGroup, Label, Input, FormFeedback, Row, Col } from 'reactstrap';
+import { Editor } from '@tinymce/tinymce-react';
 import queryString from "query-string";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -63,6 +64,11 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
 
   const setValue = (lang: string, key: 'title' | 'content') => (ev: any) => {
     setState((prev: any) => ({ ...prev, [key]: { ...prev[key], [lang]: ev.target.value } }));
+    setErrors((prev: any) => ({ ...prev, [key]: { ...prev[key], [lang]: '' } }));
+  }
+
+  const setTextAreaValue = (lang: string, key: 'title' | 'content') => (value: string) => {
+    setState((prev: any) => ({ ...prev, [key]: { ...prev[key], [lang]: value } }));
     setErrors((prev: any) => ({ ...prev, [key]: { ...prev[key], [lang]: '' } }));
   }
 
@@ -189,8 +195,8 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
   return (
     <>
       <Row>
-        <Col md={4} />
-        <Col md={4}>
+        <Col md={1} />
+        <Col md={10}>
           <Form onSubmit={handleSave} className={styles.createUpdateForm}>
             <FormGroup>
               <Label htmlFor="category_id">{t('category_title')}</Label>
@@ -205,6 +211,19 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
               />
               <Input type="hidden" invalid />
               {errors.category_id && <FormFeedback>{t(errors.category_id)}</FormFeedback>}
+            </FormGroup>
+            <FormGroup>
+              <Label for="code">{t('products_code')}</Label>
+              <Input
+                type="text"
+                id="code"
+                placeholder={t('products_code')}
+                onInput={handleChange('code')}
+                value={state.code || ''}
+                invalid={!!errors.code}
+                disabled={updateUnavailable}
+              />
+              {errors.code && <FormFeedback>{t(errors.code)}</FormFeedback>}
             </FormGroup>
             <ButtonGroup className="mb-3">
               {languages.list.map((lang, i: number) => (
@@ -236,32 +255,28 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
                 </FormGroup>
                 <FormGroup style={i === tab ? {} : { display: 'none' }}>
                   <Label for={`content_${lang.code}`}>{t('content')}</Label>
-                  <Input
-                    type="textarea"
+                  <Editor
                     id={`content_${lang.code}`}
-                    placeholder={`${t('content')} (${lang.name})`}
-                    onInput={setValue(lang.code, 'content')}
+                    apiKey={process.env.REACT_APP_TINYMCE_API_KEY}
                     value={state.content?.[lang.code] || ''}
-                    invalid={!!errors.content?.[lang.code]}
+                    onEditorChange={setTextAreaValue(lang.code, 'content')}
                     disabled={updateUnavailable}
+                    init={{
+                      height: 500,
+                      menubar: false,
+                      plugins: [
+                        'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                        'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                        'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
+                      ],
+                      toolbar: 'undo redo | blocks | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+                      content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size: 14px }'
+                    }}
                   />
                   {errors.content?.[lang.code] && <FormFeedback>{t(errors.content?.[lang.code])}</FormFeedback>}
                 </FormGroup>
               </React.Fragment>
             ))}
-            <FormGroup>
-              <Label for="code">{t('products_code')}</Label>
-              <Input
-                type="text"
-                id="code"
-                placeholder={t('products_code')}
-                onInput={handleChange('code')}
-                value={state.code || ''}
-                invalid={!!errors.code}
-                disabled={updateUnavailable}
-              />
-              {errors.code && <FormFeedback>{t(errors.code)}</FormFeedback>}
-            </FormGroup>
             <FormGroup>
               <Label for="link">{t('products_link')}</Label>
               <Input

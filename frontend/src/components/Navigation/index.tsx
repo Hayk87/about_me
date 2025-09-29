@@ -67,12 +67,7 @@ const Navigation = () => {
 
   return (
     <>
-      <Nav className={styles.mainNavigation} tabs={true}>
-        {menus.map((menu, i) => (
-          <NavItem key={menu.path}>
-            <NavLink active={menu.url === location.pathname} onClick={changePage(menu)}>{t(menu.name)}</NavLink>
-          </NavItem>
-        ))}
+      <Nav className={styles.mainNavigation} tabs={true} vertical={true}>
         <Dropdown className={styles.dashboardMenu} nav={true} isOpen={dropdownOpen} toggle={toggleDropdownOpen}>
           <DropdownToggle nav caret>
             {currentLang.name}
@@ -83,6 +78,11 @@ const Navigation = () => {
             ))}
           </DropdownMenu>
         </Dropdown>
+        {menus.map((menu, i) => (
+          <NavItem key={menu.path}>
+            <NavLink active={menu.url === location.pathname} onClick={changePage(menu)}>{t(menu.name)}</NavLink>
+          </NavItem>
+        ))}
         <NavItem className={styles.dashboardLogoutMenu}>
           <NavLink onClick={logout}>
             <FaArrowRightFromBracket />

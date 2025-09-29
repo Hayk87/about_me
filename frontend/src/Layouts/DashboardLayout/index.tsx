@@ -10,10 +10,12 @@ interface props {
 
 export default function DashboardLayout({ children }: props) {
   return (
-    <div className={styles.Dashboard}>
-      <Navigation />
-      <div className={styles.Container}>{children}</div>
+    <>
+      <div className={styles.Dashboard}>
+        <Navigation />
+        <div className={styles.Container}>{children}</div>
+      </div>
       <ToastContainer />
-    </div>
+    </>
   );
 }

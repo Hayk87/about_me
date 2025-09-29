@@ -23,6 +23,9 @@
     }
   }
   .dashboardLogoutMenu {
+    margin: auto auto 0 auto;
+    width: 100%;
+
     :global(.nav-link) {
       background-color: #000 !important;
       color: #fff;
@@ -30,6 +33,7 @@
       align-items: center;
       justify-content: center;
       gap: 5px;
+      border-radius: 0;
     }
   }
 }

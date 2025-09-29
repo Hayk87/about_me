@@ -243,6 +243,7 @@ export class ProductsService {
         }
       );
       product.title = data.title;
+      product.content = data.content;
       product.price = data.price;
       product.code = data.code;
       product.link = data.link || null;
