@@ -11,7 +11,7 @@ import {
   ParseIntPipe,
   Query,
 } from '@nestjs/common';
-import { ApiTags, ApiHeader, ApiOkResponse } from '@nestjs/swagger';
+import { ApiTags, ApiHeader, ApiOkResponse, ApiExcludeEndpoint } from '@nestjs/swagger';
 import { ProductCategoriesService } from './product-categories.service';
 import { SystemUserMetaRights } from '../system-user/system-user.decorator';
 import { rightsMapper, translationsSeed } from '../utils/variables';
@@ -44,6 +44,11 @@ export class ProductCategoriesController {
     @Query(pipes.SearchProductCategoryPipe) search: SearchProductCategoryDto,
   ): Promise<ProductCategoriesResponseDto> {
     return this.productCategoryService.getAll(search);
+  }
+
+  @Get('web')
+  getProductCategoriesForWeb(): Promise<any> {
+    return this.productCategoryService.getAllForWeb();
   }
 
   @SystemUserMetaRights(rightsMapper.productCategoriesCreate)

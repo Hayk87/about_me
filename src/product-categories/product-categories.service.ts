@@ -55,6 +55,16 @@ export class ProductCategoriesService {
     return { list, count };
   }
 
+  async getAllForWeb() {
+    const alias = 'product_category';
+    const qbList = this.productCategoriesRepository
+      .createQueryBuilder(alias)
+      .andWhere(`${alias}.is_deleted=:is_deleted`, { is_deleted: false });
+    qbList.orderBy(`${alias}.id`, 'DESC');
+    const list = await qbList.execute();
+    return { list };
+  }
+
   async createProductCategory(
     data: CreateUpdateProductCategoryDto,
   ): Promise<ProductCategoriesEntity> {

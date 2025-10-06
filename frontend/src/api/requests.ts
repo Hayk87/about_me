@@ -41,11 +41,15 @@ export const createProductsCategories = (data: any) => api.post('/api/product-ca
 
 export const getProductsCategoryById = (id: string) => api.get(`/api/product-categories/${id}`);
 
+export const getProductsCategoryForWeb = () => axios.get(`/api/product-categories/web`);
+
 export const updateProductsCategories = (id: string, data: any) => api.put(`/api/product-categories/${id}`, data);
 
 export const deleteProductsCategory = (id: string) => api.delete(`/api/product-categories/${id}`);
 
 export const getProductsList = (params: ProductsSearchInterface) => api.get('/api/products', { params });
+
+export const getProductsListByCategoryCode = (code: string) => axios.get(`/api/products/by-category/${code}`);
 
 export const createProduct = (data: any) => api.post('/api/products', data);
 

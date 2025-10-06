@@ -55,6 +55,8 @@ for (const Page of privatePages) {
 const webPagesList = [
   webPages.MainPage,
   webPages.AboutMePage,
+  webPages.AppCategoryListPage,
+  webPages.AppDetailsPage,
 ];
 
 export default function(authData: any) {

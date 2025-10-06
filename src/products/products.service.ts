@@ -204,6 +204,19 @@ export class ProductsService {
     return product;
   }
 
+  async getProductsByCategoryCode(
+    code: string,
+  ): Promise<any> {
+    const category = await this.productCategoryRepository.findOne({
+      where: { is_deleted: false, code },
+      relations: { products: { mainPhoto: true } }
+    });
+    if (!category) {
+      throw new NotFoundException(translationsSeed.data_not_found.key);
+    }
+    return category;
+  }
+
   async updateProduct(
     id: number,
     data: UpdateProductInterface,

@@ -81,6 +81,13 @@ export class ProductsController {
     return this.productsService.getProductById(id);
   }
 
+  @Get('by-category/:categoryCode')
+  getProductsByCategoryCode(
+    @Param('categoryCode', pipes.ByCategoryCodeProductsPipe) categoryCode: string
+  ) {
+    return this.productsService.getProductsByCategoryCode(categoryCode);
+  }
+
   @SystemUserMetaRights(
     rightsMapper.productUpdate,
   )

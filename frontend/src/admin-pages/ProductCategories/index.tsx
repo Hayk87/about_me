@@ -121,6 +121,7 @@ export default function Page() {
   return (
     <>
       <div className={styles.mainContainer}>
+        <h1>{t('product_categories')}</h1>
         <div className={styles.btns}>
           {checkPermission(profile.data, rightsMapperData.productCategoriesCreate) && (
             <Button type="button" color="success" size="sm" onClick={addNewItem}>

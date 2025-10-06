@@ -37,12 +37,13 @@ import { ProductsModule } from './products/products.module';
           }),
         ]
       : []),
-    ThrottlerModule.forRoot([
-      {
-        ttl: 60000,
-        limit: 20,
-      },
-    ]),
+    // Todo only for admin page
+    // ThrottlerModule.forRoot([
+    //   {
+    //     ttl: 60000,
+    //     limit: 20,
+    //   },
+    // ]),
     LanguagesModule,
     TranslatesModule,
     RightsModule,
@@ -55,10 +56,11 @@ import { ProductsModule } from './products/products.module';
   ],
   controllers: [],
   providers: [
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
+    // Todo only for admin page
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: ThrottlerGuard,
+    // },
   ],
 })
 export class AppModule {}
