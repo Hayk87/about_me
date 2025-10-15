@@ -119,6 +119,7 @@ export default function Page() {
   return (
     <>
       <div className={styles.mainContainer}>
+        <h1>{t('staffs')}</h1>
         <div className={styles.btns}>
           {checkPermission(profile.data, rightsMapperData.staffCreate) && (
             <Button type="button" color="success" size="sm" onClick={addNewItem}>

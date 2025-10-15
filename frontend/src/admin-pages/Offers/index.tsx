@@ -94,6 +94,7 @@ export default function Page() {
   return (
     <>
       <div className={styles.mainContainer}>
+        <h1>{t('offers')}</h1>
         <div className={styles.btns}>
           <Button type="button" color="info" size="sm" onClick={toggleFilterOpen}>
             <FaFilter /> {t('filter')}
