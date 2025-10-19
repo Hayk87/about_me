@@ -1,6 +1,5 @@
-import React, { useMemo, useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import queryString from "query-string";
 import {
   Collapse,
   Navbar,
@@ -13,11 +12,9 @@ import {
   DropdownMenu,
   DropdownItem,
 } from 'reactstrap';
-import { useSelector } from "react-redux";
-import { useTranslate, webPagesPath, useDevice } from "../../utils";
+import { useTranslate, webPagesPath, useDevice, useLanguage } from "../../utils";
 import { getProductsCategoryForWeb } from "../../api/requests";
 import styles from './style.module.scss';
-import { RootState } from "../../store";
 
 interface NavigationWebProp {
 
@@ -51,10 +48,7 @@ export const NavigationWeb = (props: NavigationWebProp) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslate();
-  const languages = useSelector((state: RootState) => state.languages);
-  const defaultLang = languages.list.find((item: any) => item.is_default);
-  const search = useMemo(() => queryString.parse(location.search), [location.search]);
-  const lngCode = search.lng || defaultLang.code;
+  const { lngCode, search } = useLanguage();
 
   const toggleIsOpenMenu = useCallback(() => {
     if (isWindow) return;

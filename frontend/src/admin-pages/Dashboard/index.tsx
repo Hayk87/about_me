@@ -1,12 +1,10 @@
 import React, { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
-import queryString from "query-string";
 import { FaCopy } from "react-icons/fa6";
 import { Table, Input, Button, FormFeedback, FormGroup, Label, Alert, Tooltip } from "reactstrap";
 import { RootState } from "../../store";
 import { changeSystemUserPassword, toggleEnableAuthenticator } from "../../api/requests";
-import { useTranslate, adminPagesPath } from "../../utils";
+import { useTranslate, useLanguage, adminPagesPath } from "../../utils";
 import { useToast } from "../../hooks";
 import styles from "./styles.module.scss";
 
@@ -26,18 +24,14 @@ export default function Dashboard() {
   const [savePasswordSubmitted, setSavePasswordSubmitted] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
   const { t } = useTranslate();
-  const location = useLocation();
+  const { lngCode } = useLanguage();
   const { alertSuccess, alertError } = useToast();
-  const languages = useSelector((state: RootState) => state.languages);
   const profile = useSelector((state: RootState) => state.profile);
   const [enableGoogleAuth, setEnableGoogleAuth] = useState<{ enabled: boolean, image: string, code: string }>({
     enabled: !!profile.data?.authenticator_enabled,
     image: '',
     code: ''
   });
-  const defaultLang = languages.list.find((item: any) => item.is_default);
-  const parsed = queryString.parse(location.search);
-  const lngCode = parsed.lng || defaultLang.code;
 
   const handlePassword = (key: string) => (ev: React.ChangeEvent<HTMLInputElement>) => {
     setPasswords(prev => ({ ...prev, [key]: ev.target.value }));
