@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import queryString from "query-string";
 import {
   Collapse,
   Navbar,
@@ -15,6 +16,8 @@ import {
 import { useTranslate, webPagesPath, useDevice, useLanguage } from "../../utils";
 import { getProductsCategoryForWeb } from "../../api/requests";
 import styles from './style.module.scss';
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 
 interface NavigationWebProp {
 
@@ -49,6 +52,8 @@ export const NavigationWeb = (props: NavigationWebProp) => {
   const location = useLocation();
   const { t } = useTranslate();
   const { lngCode, search } = useLanguage();
+  const languages = useSelector((state: RootState) => state.languages);
+  const currentLang = languages.list.find((item: any) => item.code === lngCode);
 
   const toggleIsOpenMenu = useCallback(() => {
     if (isWindow) return;
@@ -59,6 +64,14 @@ export const NavigationWeb = (props: NavigationWebProp) => {
     ev.preventDefault();
     const URL = `${pathPath}${search.lng ? `?lng=${lngCode}` : ''}`;
     navigate(URL);
+  }
+
+  const changeLanguage = (lang: string) => async () => {
+    const _search = { ...search };
+    _search.lng = lang;
+    const urlParams = queryString.stringify(_search);
+    const url = `${location.pathname}?${urlParams}`;
+    navigate(url);
   }
 
   useEffect(() => {
@@ -108,6 +121,16 @@ export const NavigationWeb = (props: NavigationWebProp) => {
                 </NavItem>
               );
             })}
+            <UncontrolledDropdown nav inNavbar style={{ margin: '0 auto' }}>
+              <DropdownToggle nav caret>
+                {currentLang.name}
+              </DropdownToggle>
+              <DropdownMenu>
+                {languages.list.map((item: any) => (
+                  <DropdownItem key={item.code} onClick={changeLanguage(item.code)} disabled={item.code === currentLang.code}>{item.name}</DropdownItem>
+                ))}
+              </DropdownMenu>
+            </UncontrolledDropdown>
           </Nav>
         </Collapse>
       </Navbar>

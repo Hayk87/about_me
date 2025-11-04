@@ -1,16 +1,60 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import WebLayout from "../../Layouts/WebLayout";
-import { webPagesPath } from "../../utils";
+import { formatNumberWithCommas, useLanguage, useTranslate, webPagesPath } from "../../utils";
+import { getProductByCategoryCodeAndProductCode } from "../../api/requests";
+import Loading from "../../components/Loading";
+import PageNotFound from "../PageNotFound";
 
 export const path: string = `${webPagesPath.buyApp}/:categoryCode/details/:appCode`;
 
+interface IStateData {
+  isLoading: boolean;
+  error: string;
+  data: any;
+}
+const initialStateData = { isLoading: false, error: '', data: null };
+
 const AppDetails = () => {
+  const [stateData, setStateData] = useState<IStateData>(initialStateData);
   const params = useParams();
+  const { t } = useTranslate();
+  const { lngCode, location } = useLanguage();
+
+  useEffect(() => {
+    setStateData(prev => ({ ...prev, isLoading: true, error: '' }));
+    getProductByCategoryCodeAndProductCode(params.categoryCode!, params.appCode!)
+      .then((res) => {
+        setStateData(prev => ({ ...prev, data: res.data, isLoading: false }));
+      })
+      .catch(err => {
+        setStateData(prev => ({ ...prev, error: err.response.data.message, isLoading: false }));
+      });
+  }, [params.categoryCode, params.appCode]);
+
+  if (stateData.isLoading || !stateData.data) return <Loading />;
+
+  if (stateData.error) {
+    return <PageNotFound code={stateData.error} />
+  }
 
   return (
     <WebLayout>
-      <h1>{params.categoryCode} - {params.appCode}</h1>
+      <>
+        <h1>{stateData.data.category.title[lngCode]}</h1>
+        {stateData.data.files.map((file: any) => (
+          <div key={file.id}>
+            <img
+              src={`${process.env.REACT_APP_UPLOADED_FILES_BASE_URL}/api/files/details/${file.id}`}
+              alt={stateData.data.category.title[lngCode]}
+              title={stateData.data.category.title[lngCode]}
+              width={300}
+            />
+          </div>
+        ))}
+        <div dangerouslySetInnerHTML={{ __html: stateData.data.content[lngCode] }} />
+        <div>{t('products_price')} {formatNumberWithCommas(stateData.data.price)} $</div>
+      </>
     </WebLayout>
   );
 }

@@ -52,7 +52,7 @@ const AppCategoryList = () => {
                 alt={product.title?.[lngCode]}
                 title={product.title?.[lngCode]}
               />
-              <div dangerouslySetInnerHTML={{ __html: product.content[lngCode] }} />
+              <div>{product.short_content?.[lngCode]}</div>
               <div className={styles.viewMore}>
                 <Link to={`${location.pathname}/details/${product.code}`}>{t('view_more')}</Link>
               </div>

@@ -27,7 +27,6 @@ import { RootState } from "../../store";
 import { useToast } from "../../hooks";
 import styles from "./create-update-form-styles.module.scss";
 import { ProductsCategoriesSearchInterface } from "../../interfaces";
-import { productsDetailsId } from "../../utils/admin-pages-path";
 
 interface CreateUpdateFormInterface {
   id?: string;
@@ -62,7 +61,7 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
   const lngCode = parsed.lng || defaultLang.code;
   const updateUnavailable = !!(id && !checkPermission(profile.data, rightsMapperData.productUpdate));
 
-  const setValue = (lang: string, key: 'title' | 'content') => (ev: any) => {
+  const setValue = (lang: string, key: 'title' | 'content' | 'short_content') => (ev: any) => {
     setState((prev: any) => ({ ...prev, [key]: { ...prev[key], [lang]: ev.target.value } }));
     setErrors((prev: any) => ({ ...prev, [key]: { ...prev[key], [lang]: '' } }));
   }
@@ -117,6 +116,7 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
         .then(res => {
           setState({
             title: res.data.title,
+            short_content: res.data.short_content,
             content: res.data.content,
             category_id: res.data.category?.id,
             code: res.data.code,
@@ -145,6 +145,7 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
     send.append('category_id', state.category_id);
     send.append('code', state.code);
     send.append('title', JSON.stringify(state.title));
+    send.append('short_content', JSON.stringify(state.short_content));
     send.append('content', JSON.stringify(state.content));
     send.append('price', state.price);
     for (const file of (state.files || [])) {
@@ -249,6 +250,19 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
                     onInput={setValue(lang.code, 'title')}
                     value={state.title?.[lang.code] || ''}
                     invalid={!!errors.title?.[lang.code]}
+                    disabled={updateUnavailable}
+                  />
+                  {errors.title?.[lang.code] && <FormFeedback>{t(errors.title?.[lang.code])}</FormFeedback>}
+                </FormGroup>
+                <FormGroup style={i === tab ? {} : { display: 'none' }}>
+                  <Label for={`short_content_${lang.code}`}>{t('short_content')}</Label>
+                  <Input
+                    type="text"
+                    id={`short_content_${lang.code}`}
+                    placeholder={`${t('short_content')} (${lang.name})`}
+                    onInput={setValue(lang.code, 'short_content')}
+                    value={state.short_content?.[lang.code] || ''}
+                    invalid={!!errors.short_content?.[lang.code]}
                     disabled={updateUnavailable}
                   />
                   {errors.title?.[lang.code] && <FormFeedback>{t(errors.title?.[lang.code])}</FormFeedback>}

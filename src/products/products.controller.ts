@@ -83,9 +83,17 @@ export class ProductsController {
 
   @Get('by-category/:categoryCode')
   getProductsByCategoryCode(
-    @Param('categoryCode', pipes.ByCategoryCodeProductsPipe) categoryCode: string
+    @Param('categoryCode', pipes.ValidateByCodePipe) categoryCode: string
   ) {
     return this.productsService.getProductsByCategoryCode(categoryCode);
+  }
+
+  @Get('by-category/:categoryCode/product/:productCode')
+  getProductsByCategoryCodeAndProductCode(
+    @Param('categoryCode', pipes.ValidateByCodePipe) categoryCode: string,
+    @Param('productCode', pipes.ValidateByCodePipe) productCode: string,
+  ) {
+    return this.productsService.getProductsByCategoryCodeAndProductCode(categoryCode, productCode);
   }
 
   @SystemUserMetaRights(

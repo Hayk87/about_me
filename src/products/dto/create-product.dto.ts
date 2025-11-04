@@ -10,6 +10,9 @@ export class CreateProductDto {
   @ApiProperty({ type: Object, description: 'Title value, ex. { hy: "text" }' })
   title: Record<string, string>;
 
+  @ApiPropertyOptional({ type: Object, description: 'Title value, ex. { hy: "text" }' })
+  short_content?: Record<string, string>;
+
   @ApiProperty({ type: Object, description: 'Content value, ex. { hy: "text" }' })
   content: Record<string, string>;
 

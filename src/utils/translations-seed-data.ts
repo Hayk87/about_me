@@ -832,4 +832,11 @@ export const translationsSeedData = {
       en: 'Content',
     },
   },
+  short_content: {
+    key: 'short_content',
+    value: {
+      hy: 'Կարճ բովանդակություն',
+      en: 'Short content',
+    },
+  },
 };

@@ -8,17 +8,13 @@ import DashboardLayout from "../DashboardLayout";
 import { useEffect } from "react";
 import { getCurrentTranslates } from "../../api/requests";
 import { initCurrentTranslates } from "../../store/slices/translates";
+import { useLanguage } from "../../utils";
 
 export default function GlobalLayout() {
   const firstRender = useRef<boolean>(true);
   const dispatch = useDispatch();
-  const languages = useSelector((state: RootState) => state.languages);
-  const defaultLang = languages.list.find((item: any) => item.is_default);
   const profile = useSelector((state: RootState) => state.profile);
-  const location = useLocation();
-  const search = queryString.parse(location.search);
-  const lngCode = search.lng || defaultLang.code;
-  const currentLang = languages.list.find((item: any) => item.code === lngCode);
+  const { currentLang, lngCode, languages } = useLanguage();
 
   useEffect(() => {
     if (firstRender.current) {

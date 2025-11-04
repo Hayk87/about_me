@@ -27,6 +27,9 @@ export class ProductsEntity {
   @Column({ type: 'jsonb', nullable: false })
   title: object;
 
+  @Column({ type: 'jsonb', nullable: true })
+  short_content: object;
+
   @Column({ type: 'jsonb', nullable: false })
   content: object;
 

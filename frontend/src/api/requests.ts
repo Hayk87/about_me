@@ -51,6 +51,8 @@ export const getProductsList = (params: ProductsSearchInterface) => api.get('/ap
 
 export const getProductsListByCategoryCode = (code: string) => axios.get(`/api/products/by-category/${code}`);
 
+export const getProductByCategoryCodeAndProductCode = (category: string, product: string) => axios.get(`/api/products/by-category/${category}/product/${product}`);
+
 export const createProduct = (data: any) => api.post('/api/products', data);
 
 export const getProductById = (id: string) => api.get(`/api/products/${id}`);

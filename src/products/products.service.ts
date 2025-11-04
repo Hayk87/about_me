@@ -67,6 +67,7 @@ export class ProductsService {
         code: data.code,
         link: data.link || null,
         title: data.title,
+        short_content: data.short_content,
         content: data.content,
         price: data.price,
         operator,
@@ -217,6 +218,31 @@ export class ProductsService {
     return category;
   }
 
+  async getProductsByCategoryCodeAndProductCode(
+    categoryCode: string,
+    productCode: string,
+  ): Promise<any> {
+    const product = await this.productsRepository.findOne({
+      where: {
+        is_deleted: false,
+        code: productCode,
+        category: {
+          code: categoryCode,
+          is_deleted: false
+        }
+      },
+      relations: {
+        category: true,
+        mainPhoto: true,
+        files: true
+      }
+    });
+    if (!product) {
+      throw new NotFoundException(translationsSeed.data_not_found.key);
+    }
+    return product;
+  }
+
   async updateProduct(
     id: number,
     data: UpdateProductInterface,
@@ -256,6 +282,7 @@ export class ProductsService {
         }
       );
       product.title = data.title;
+      product.short_content = data.short_content;
       product.content = data.content;
       product.price = data.price;
       product.code = data.code;

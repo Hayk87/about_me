@@ -19,6 +19,9 @@ export class UpdateProductPipe implements PipeTransform {
       post.title = JSON.parse(post.title);
     } catch (e) {}
     try {
+      post.short_content = JSON.parse(post.short_content);
+    } catch (e) {}
+    try {
       post.content = JSON.parse(post.content);
     } catch (e) {}
     try {
@@ -53,6 +56,17 @@ export class UpdateProductPipe implements PipeTransform {
         plainData.title = {
           ...plainData.title,
           [lang.code]: post.title?.[lang.code],
+        };
+      }
+      if (post.short_content?.[lang.code] && typeof post.short_content?.[lang.code] !== 'string') {
+        errors.short_content = {
+          ...errors.short_content,
+          [lang.code]: translationsSeed.invalid_value.key,
+        };
+      } else {
+        plainData.short_content = {
+          ...plainData.short_content,
+          [lang.code]: post.short_content?.[lang.code],
         };
       }
       if (typeof post.content?.[lang.code] !== 'string') {

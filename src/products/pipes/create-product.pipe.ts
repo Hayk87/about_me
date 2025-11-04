@@ -52,6 +52,19 @@ export class CreateProductPipe implements PipeTransform {
           [lang.code]: post.title?.[lang.code],
         };
       }
+      if (post.short_content?.[lang.code]) {
+        if (typeof post.short_content?.[lang.code] !== 'string') {
+          errors.short_content = {
+            ...errors.short_content,
+            [lang.code]: translationsSeed.invalid_value.key,
+          };
+        } else {
+          plainData.short_content = {
+            ...plainData.short_content,
+            [lang.code]: post.short_content?.[lang.code],
+          };
+        }
+      }
       if (typeof post.content?.[lang.code] !== 'string') {
         errors.content = {
           ...errors.content,

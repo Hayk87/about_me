@@ -9,9 +9,10 @@ export const useLanguage = () => {
   const languages = useSelector((state: RootState) => state.languages);
   const defaultLang = languages.list.find((item: any) => item.is_default);
   const search = queryString.parse(location.search);
-  const lngCode = search.lng || defaultLang.code;
+  const lngCode = search.lng ? (languages.list.find((item: any) => item.code === search.lng)?.code || defaultLang.code) : defaultLang.code;
+  const currentLang = languages.list.find((item: any) => item.code === lngCode);
 
-  return { location, lngCode, search };
+  return { location, lngCode, search, currentLang, languages };
 }
 
 export const useTranslate = () => {
