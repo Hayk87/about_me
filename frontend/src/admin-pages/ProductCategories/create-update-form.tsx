@@ -85,25 +85,9 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
 
   return (
     <>
-      <Row>
-        <Col md={4} />
-        <Col md={4}>
-          <Form onSubmit={handleSave} className={styles.createUpdateForm}>
-            {languages.list.map(lang => (
-              <FormGroup key={lang.code}>
-                <Label for={`title_${lang.code}`}>{`${t('naming')} (${lang.name})`}</Label>
-                <Input
-                  type="text"
-                  id={`title_${lang.code}`}
-                  placeholder={`${t('naming')} (${lang.name})`}
-                  onInput={setValue(lang.code)}
-                  value={state.title[lang.code] || ''}
-                  invalid={!!errors.title?.[lang.code]}
-                  readOnly={updateUnavailable}
-                />
-                {errors.title?.[lang.code] && <FormFeedback>{t(errors.title?.[lang.code])}</FormFeedback>}
-              </FormGroup>
-            ))}
+      <Form onSubmit={handleSave} className={styles.createUpdateForm}>
+        <Row>
+          <Col>
             <FormGroup>
               <Label for="code">{t('code')}</Label>
               <Input
@@ -117,6 +101,27 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
               />
               {errors.code && <FormFeedback>{t(errors.code)}</FormFeedback>}
             </FormGroup>
+          </Col>
+          {languages.list.map(lang => (
+            <Col key={lang.code}>
+              <FormGroup>
+                <Label for={`title_${lang.code}`}>{`${t('naming')} (${lang.name})`}</Label>
+                <Input
+                  type="text"
+                  id={`title_${lang.code}`}
+                  placeholder={`${t('naming')} (${lang.name})`}
+                  onInput={setValue(lang.code)}
+                  value={state.title[lang.code] || ''}
+                  invalid={!!errors.title?.[lang.code]}
+                  readOnly={updateUnavailable}
+                />
+                {errors.title?.[lang.code] && <FormFeedback>{t(errors.title?.[lang.code])}</FormFeedback>}
+              </FormGroup>
+            </Col>
+          ))}
+        </Row>
+        <Row>
+          <Col>
             <div className={styles.buttonsActions}>
               <Button type="button" color="secondary" className={styles.goBack} onClick={goBack} size="sm">
                 <FaArrowLeft /> {t('go_back')}
@@ -127,9 +132,9 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
                 </Button>
               )}
             </div>
-          </Form>
-        </Col>
-      </Row>
+          </Col>
+        </Row>
+      </Form>
       {loading && <Loading />}
     </>
   );

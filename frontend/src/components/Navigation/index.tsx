@@ -80,7 +80,7 @@ const Navigation = () => {
         </Dropdown>
         {menus.map((menu, i) => (
           <NavItem key={menu.path}>
-            <NavLink active={menu.url === location.pathname} onClick={changePage(menu)}>{t(menu.name)}</NavLink>
+            <NavLink active={location.pathname.includes(menu.url)} onClick={changePage(menu)}>{t(menu.name)}</NavLink>
           </NavItem>
         ))}
         <NavItem className={styles.dashboardLogoutMenu}>

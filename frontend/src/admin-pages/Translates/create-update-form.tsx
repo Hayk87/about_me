@@ -95,10 +95,9 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
 
   return (
     <>
-      <Row>
-        <Col md={4} />
-        <Col md={4}>
-          <Form onSubmit={handleSave} className={styles.createUpdateForm}>
+      <Form onSubmit={handleSave} className={styles.createUpdateForm}>
+        <Row>
+          <Col>
             <FormGroup>
               <Label for="key">{t('tr_key')}</Label>
               <Input
@@ -112,8 +111,10 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
               />
               {errors.key && <FormFeedback>{t(errors.key)}</FormFeedback>}
             </FormGroup>
-            {languages.list.map(lang => (
-              <FormGroup key={lang.code}>
+          </Col>
+          {languages.list.map(lang => (
+            <Col key={lang.code}>
+              <FormGroup>
                 <Label for={`value_${lang.code}`}>{`${t('tr_value')} (${lang.name})`}</Label>
                 <Input
                   type="text"
@@ -126,20 +127,20 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
                 />
                 {errors.value?.[lang.code] && <FormFeedback>{t(errors.value?.[lang.code])}</FormFeedback>}
               </FormGroup>
-            ))}
-            <div className={styles.buttonsActions}>
-              <Button type="button" color="secondary" className={styles.goBack} onClick={goBack} size="sm">
-                <FaArrowLeft /> {t('go_back')}
+            </Col>
+          ))}
+          <div className={styles.buttonsActions}>
+            <Button type="button" color="secondary" className={styles.goBack} onClick={goBack} size="sm">
+              <FaArrowLeft /> {t('go_back')}
+            </Button>
+            {!updateUnavailable && (
+              <Button type="submit" color="primary" className={styles.saveButton} size="sm">
+                <FaFloppyDisk /> {t('save')}
               </Button>
-              {!updateUnavailable && (
-                <Button type="submit" color="primary" className={styles.saveButton} size="sm">
-                  <FaFloppyDisk /> {t('save')}
-                </Button>
-              )}
-            </div>
-          </Form>
-        </Col>
-      </Row>
+            )}
+          </div>
+        </Row>
+      </Form>
       {loading && <Loading />}
     </>
   );

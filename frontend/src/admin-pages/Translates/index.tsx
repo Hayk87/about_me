@@ -140,27 +140,35 @@ export default function Page() {
           </tr>
           </thead>
           <tbody>
-          {LIST.map(item => (
-            <tr key={item.key}>
-              <td>{item.key}</td>
-              <td>{item.value}</td>
-              <td style={{ textAlign: 'center' }}>
-                {checkPermission(profile.data, rightsMapperData.translateReadDetails) && (
-                  <>
-                    <Button type="button" className="text-center" color="primary" size="sm" onClick={editItem(item)}>
-                      <FaMarker /> {t('edit')}
-                    </Button>
-                    &nbsp;&nbsp;
-                  </>
-                )}
-                {checkPermission(profile.data, rightsMapperData.translateDelete) && (
-                  <Button type="button" className="text-center" color="danger" size="sm" onClick={deleteItem(item)}>
-                    <FaTrash /> {t('delete')}
-                  </Button>
-                )}
-              </td>
+          {LIST.length ? (
+            <>
+              {LIST.map(item => (
+                <tr key={item.key}>
+                  <td>{item.key}</td>
+                  <td>{item.value}</td>
+                  <td style={{ textAlign: 'center' }}>
+                    {checkPermission(profile.data, rightsMapperData.translateReadDetails) && (
+                      <>
+                        <Button type="button" className="text-center" color="primary" size="sm" onClick={editItem(item)}>
+                          <FaMarker /> {t('edit')}
+                        </Button>
+                        &nbsp;&nbsp;
+                      </>
+                    )}
+                    {checkPermission(profile.data, rightsMapperData.translateDelete) && (
+                      <Button type="button" className="text-center" color="danger" size="sm" onClick={deleteItem(item)}>
+                        <FaTrash /> {t('delete')}
+                      </Button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </>
+          ) : (
+            <tr>
+              <td colSpan={3} className="text-center">{t('data_not_found')}</td>
             </tr>
-          ))}
+          )}
           </tbody>
         </Table>
         <div className={styles.paginationContainer}>

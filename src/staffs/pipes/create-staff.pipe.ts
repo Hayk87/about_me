@@ -17,7 +17,7 @@ export class CreateStaffPipe implements PipeTransform {
     } else if (!Array.isArray(post.rights)) {
       errors.rights = translationsSeed.invalid_value.key;
     } else if (!post.rights.length) {
-      // errors.rights = translationsSeed.required_field.key;
+      errors.rights = translationsSeed.required_field.key;
     } else if (post.rights.some((r) => typeof r !== 'number')) {
       errors.rights = translationsSeed.invalid_value.key;
     }

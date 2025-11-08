@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Button, Form, FormGroup, Label, Input, FormFeedback, Row, Col } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, FormFeedback, Row, Col, Table } from 'reactstrap';
 import queryString from "query-string";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -49,6 +49,24 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
 
   const handleRights = (selectedRights: any) => {
     setState(prev => ({ ...prev, rights: selectedRights.map((item: any) => item.value) }));
+    setErrors((prev: any) => ({ ...prev, rights: '' }));
+  }
+
+  const handleRightChange = (item: any) => (ev: any) => {
+    if (ev.target.checked) {
+      setState(prev => ({ ...prev, rights: [...prev.rights, item.value] }));
+    } else {
+      setState(prev => ({ ...prev, rights: prev.rights.filter(r => r !== item.value) }));
+    }
+    setErrors((prev: any) => ({ ...prev, rights: '' }));
+  }
+
+  const handleAllRightChange = (ev: any) => {
+    if (ev.target.checked) {
+      setState(prev => ({ ...prev, rights: rightsOptions.map((item: any) => item.value) }));
+    } else {
+      setState(prev => ({ ...prev, rights: [] }));
+    }
     setErrors((prev: any) => ({ ...prev, rights: '' }));
   }
 
@@ -104,39 +122,61 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
     <>
       <Form onSubmit={handleSave} className={styles.createUpdateForm}>
         <Row>
-          <Col md={4}>
-              {languages.list.map(lang => (
-                <FormGroup key={lang.code}>
-                  <Label for={`title_${lang.code}`}>{`${t('naming')} (${lang.name})`}</Label>
-                  <Input
-                    type="text"
-                    id={`title_${lang.code}`}
-                    placeholder={`${t('naming')} (${lang.name})`}
-                    onInput={setValue(lang.code)}
-                    value={state.title[lang.code] || ''}
-                    invalid={!!errors.title?.[lang.code]}
-                    readOnly={updateUnavailable}
-                  />
-                  {errors.title?.[lang.code] && <FormFeedback>{t(errors.title?.[lang.code])}</FormFeedback>}
-                </FormGroup>
+          {languages.list.map(lang => (
+            <Col key={lang.code}>
+              <FormGroup>
+                <Label for={`title_${lang.code}`}>{`${t('naming')} (${lang.name})`}</Label>
+                <Input
+                  type="text"
+                  id={`title_${lang.code}`}
+                  placeholder={`${t('naming')} (${lang.name})`}
+                  onInput={setValue(lang.code)}
+                  value={state.title[lang.code] || ''}
+                  invalid={!!errors.title?.[lang.code]}
+                  readOnly={updateUnavailable}
+                />
+                {errors.title?.[lang.code] && <FormFeedback>{t(errors.title?.[lang.code])}</FormFeedback>}
+              </FormGroup>
+            </Col>
+          ))}
+        </Row>
+        <Row>
+          <Col>
+            <Table className={styles.staffRightsTbl} border={1} bordered striped>
+              <thead>
+                <tr>
+                  <th>
+                    <input type="checkbox" onChange={handleAllRightChange} checked={rightsOptions.length === rightsSelected.length} />
+                  </th>
+                  <th>
+                    {t("staff_rights")}
+                    {errors.rights && (
+                      <>
+                        &nbsp;&nbsp;
+                        <span className="text-danger">{t(errors.rights)}</span>
+                      </>
+                    )}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+              {rightsOptions.map((item: any) => (
+                <tr key={item.value}>
+                  <td>
+                    <input
+                      type="checkbox"
+                      id={`right-${item.value}`}
+                      onChange={handleRightChange(item)}
+                      checked={state.rights.includes(item.value)}
+                    />
+                  </td>
+                  <td>
+                    <label htmlFor={`right-${item.value}`}>{item.label}</label>
+                  </td>
+                </tr>
               ))}
-          </Col>
-          <Col md={8}>
-            <FormGroup>
-              <Label for="rights">{t('staff_rights')}</Label>
-              <ReactSelect
-                id="rights"
-                options={rightsOptions}
-                onChange={handleRights}
-                value={rightsSelected}
-                placeholder={t('staff_rights')}
-                isDisabled={updateUnavailable}
-                closeMenuOnSelect={false}
-                isMulti
-              />
-              <Input type="hidden" invalid />
-              {errors.rights && <FormFeedback>{t(errors.rights)}</FormFeedback>}
-            </FormGroup>
+              </tbody>
+            </Table>
           </Col>
         </Row>
         <Row>

@@ -100,10 +100,9 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
 
   return (
     <>
-      <Row>
-        <Col md={4} />
-        <Col md={4}>
-          <Form onSubmit={handleSave} className={styles.createUpdateForm}>
+      <Form onSubmit={handleSave} className={styles.createUpdateForm}>
+        <Row>
+          <Col>
             <FormGroup>
               <Label for="first_name">{t('first_name')}</Label>
               <Input
@@ -117,6 +116,8 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
               />
               {errors.first_name && <FormFeedback>{t(errors.first_name)}</FormFeedback>}
             </FormGroup>
+          </Col>
+          <Col>
             <FormGroup>
               <Label for="last_name">{t('last_name')}</Label>
               <Input
@@ -130,6 +131,8 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
               />
               {errors.last_name && <FormFeedback>{t(errors.last_name)}</FormFeedback>}
             </FormGroup>
+          </Col>
+          <Col>
             <FormGroup>
               <Label for="email">{t('email')}</Label>
               <Input
@@ -144,6 +147,10 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
               />
               {errors.email && <FormFeedback>{t(errors.email)}</FormFeedback>}
             </FormGroup>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
             <FormGroup>
               <Label for="password">{t('password')}</Label>
               <Input
@@ -157,6 +164,8 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
               />
               {errors.password && <FormFeedback>{t(errors.password)}</FormFeedback>}
             </FormGroup>
+          </Col>
+          <Col>
             <FormGroup>
               <Label htmlFor="staff_id">{t('staff_title')}</Label>
               <Select
@@ -171,19 +180,19 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
               <Input type="hidden" invalid />
               {errors.staff_id && <FormFeedback>{t(errors.staff_id)}</FormFeedback>}
             </FormGroup>
-            <div className={styles.buttonsActions}>
-              <Button type="button" color="secondary" className={styles.goBack} onClick={goBack} size="sm">
-                <FaArrowLeft /> {t('go_back')}
+          </Col>
+          <Col className={styles.buttonsActions}>
+            <Button type="button" color="secondary" className={styles.goBack} onClick={goBack} size="sm">
+              <FaArrowLeft /> {t('go_back')}
+            </Button>
+            {!updateUnavailable && (
+              <Button type="submit" color="primary" className={styles.saveButton} size="sm">
+                <FaFloppyDisk /> {t('save')}
               </Button>
-              {!updateUnavailable && (
-                <Button type="submit" color="primary" className={styles.saveButton} size="sm">
-                  <FaFloppyDisk /> {t('save')}
-                </Button>
-              )}
-            </div>
-          </Form>
-        </Col>
-      </Row>
+            )}
+          </Col>
+        </Row>
+      </Form>
       {loading && <Loading />}
     </>
   );

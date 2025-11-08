@@ -81,10 +81,9 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
 
   return (
     <>
-      <Row>
-        <Col md={4} />
-        <Col md={4}>
-          <Form onSubmit={(ev) => ev.preventDefault()} className={styles.createUpdateForm}>
+      <Form onSubmit={(ev) => ev.preventDefault()} className={styles.createUpdateForm}>
+        <Row>
+          <Col>
             <FormGroup>
               <Label for="name">{t('naming')}</Label>
               <Input
@@ -94,6 +93,8 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
                 readOnly
               />
             </FormGroup>
+          </Col>
+          <Col>
             <FormGroup>
               <Label for="name">{t('email')}</Label>
               <Input
@@ -103,6 +104,10 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
                 readOnly
               />
             </FormGroup>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
             <FormGroup>
               <Label for="name">{t('content')}</Label>
               <Input
@@ -113,6 +118,10 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
                 readOnly
               />
             </FormGroup>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
             {state.files?.length > 0 && (
               <div className={styles.filesContainer}>
                 {state.files?.map(file => (
@@ -132,9 +141,9 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
                 <FaArrowLeft /> {t('go_back')}
               </Button>
             </div>
-          </Form>
-        </Col>
-      </Row>
+          </Col>
+        </Row>
+      </Form>
       {loading && <Loading />}
     </>
   );

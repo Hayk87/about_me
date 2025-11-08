@@ -1,9 +1,35 @@
 .createUpdateForm {
-  text-align: center;
   border: 1px solid var(--bg-color);
   box-shadow: 0 0 5px var(--bg-color);
   border-radius: 8px;
   padding: 10px;
+
+  .staffRightsTbl {
+    width: 100%;
+
+    thead {
+      tr {
+        th {
+          &:first-child {
+            width: 70px;
+          }
+          label {
+            margin-left: 10px;
+          }
+        }
+      }
+    }
+
+    tbody {
+      tr {
+        td {
+          label {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
 }
 
 .buttonsActions {
