@@ -35,9 +35,7 @@ export default function Page() {
   const languages = useSelector((state: RootState) => state.languages);
   const rows = useSelector((state: RootState) => state.offers);
   const profile = useSelector((state: RootState) => state.profile);
-  const defaultLang = languages.list.find((item: any) => item.is_default);
   const parsed = queryString.parse(location.search);
-  const lngCode = parsed.lng || defaultLang.code;
   const { t } = useTranslate();
   const pages = useMemo(() => Math.ceil(rows.count / itemsPerPage), [rows.count]);
   const page = useMemo(() => parseInt((parsed.page as string)) || 1, [parsed.page]);

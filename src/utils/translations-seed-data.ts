@@ -853,4 +853,53 @@ export const translationsSeedData = {
       en: 'Is public',
     },
   },
+  submit: {
+    key: 'submit',
+    value: {
+      hy: 'Ուղարկել',
+      en: 'Submit',
+    },
+  },
+  files: {
+    key: 'files',
+    value: {
+      hy: 'Ֆայլեր',
+      en: 'Files',
+    },
+  },
+  file_types: {
+    key: 'file_types',
+    value: {
+      hy: 'Ընտրել jpeg, jpg, png, pdf, xls մինչև 10MB ամեն մեկը',
+      en: 'Please choose jpeg, jpg, png, pdf, xls files up to 10MB each one',
+    },
+  },
+  information: {
+    key: 'information',
+    value: {
+      hy: 'Տեղեկատվություն',
+      en: 'Information',
+    },
+  },
+  information_placeholder: {
+    key: 'information_placeholder',
+    value: {
+      hy: 'Լրացրեք նախագծի մասին տեղեկատվությունը',
+      en: 'Fill information about project',
+    },
+  },
+  your_name: {
+    key: 'your_name',
+    value: {
+      hy: 'Ձեր անունը',
+      en: 'Your name',
+    },
+  },
+  offer_success_sent: {
+    key: 'offer_success_sent',
+    value: {
+      hy: 'Ձեր առաջարկը հաջողությամբ ուղարկվեց։ Շնորհակալություն',
+      en: 'Your offer successfully sent! Thank you',
+    },
+  },
 };
