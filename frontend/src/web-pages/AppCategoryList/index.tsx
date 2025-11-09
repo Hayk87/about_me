@@ -47,11 +47,13 @@ const AppCategoryList = () => {
           {stateData.data?.products.map((product: any) => (
             <div key={product.code} className={styles.product}>
               <div className="title">{product.title[lngCode]}</div>
-              <img
-                src={`${process.env.REACT_APP_UPLOADED_FILES_BASE_URL}/api/files/details/${product.mainPhoto.id}`}
-                alt={product.title?.[lngCode]}
-                title={product.title?.[lngCode]}
-              />
+              {product.mainPhoto?.id && (
+                <img
+                  src={`${process.env.REACT_APP_UPLOADED_FILES_BASE_URL}/api/files/details/${product.mainPhoto?.id}`}
+                  alt={product.title?.[lngCode]}
+                  title={product.title?.[lngCode]}
+                />
+              )}
               <div>{product.short_content?.[lngCode]}</div>
               <div className={styles.viewMore}>
                 <Link to={`${location.pathname}/details/${product.code}`}>{t('view_more')}</Link>

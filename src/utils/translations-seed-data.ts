@@ -839,4 +839,18 @@ export const translationsSeedData = {
       en: 'Short content',
     },
   },
+  products_order: {
+    key: 'products_order',
+    value: {
+      hy: 'Հերթականություն',
+      en: 'Order',
+    },
+  },
+  products_is_public: {
+    key: 'products_is_public',
+    value: {
+      hy: 'Հրապարակել',
+      en: 'Is public',
+    },
+  },
 };

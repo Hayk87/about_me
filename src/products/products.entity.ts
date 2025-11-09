@@ -34,6 +34,12 @@ export class ProductsEntity {
   content: object;
 
   @Column({ default: false })
+  is_public?: boolean;
+
+  @Column({ type: 'int4', default: 0 })
+  order?: number;
+
+  @Column({ default: false })
   is_deleted?: boolean;
 
   @Column({ nullable: false, type: 'int4' })

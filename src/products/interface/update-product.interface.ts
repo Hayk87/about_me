@@ -6,5 +6,7 @@ export interface UpdateProductInterface {
   content: Record<string, string>;
   category_id: number;
   price: number;
+  is_public: boolean;
+  order: number;
   removedFiles: string[];
 }

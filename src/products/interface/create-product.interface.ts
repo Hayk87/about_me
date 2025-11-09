@@ -6,4 +6,6 @@ export interface CreateProductInterface {
   content: Record<string, string>;
   category_id: number;
   price: number;
+  is_public: boolean;
+  order: number;
 }

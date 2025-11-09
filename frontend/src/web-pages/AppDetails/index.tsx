@@ -13,13 +13,13 @@ interface IStateData {
   error: string;
   data: any;
 }
-const initialStateData = { isLoading: false, error: '', data: null };
+const initialStateData = { isLoading: false, error: '', data: undefined };
 
 const AppDetails = () => {
   const [stateData, setStateData] = useState<IStateData>(initialStateData);
   const params = useParams();
   const { t } = useTranslate();
-  const { lngCode, location } = useLanguage();
+  const { lngCode } = useLanguage();
 
   useEffect(() => {
     setStateData(prev => ({ ...prev, isLoading: true, error: '' }));
@@ -28,11 +28,11 @@ const AppDetails = () => {
         setStateData(prev => ({ ...prev, data: res.data, isLoading: false }));
       })
       .catch(err => {
-        setStateData(prev => ({ ...prev, error: err.response.data.message, isLoading: false }));
+        setStateData(prev => ({ ...prev, error: err.response.data.message, isLoading: false, data: null }));
       });
   }, [params.categoryCode, params.appCode]);
 
-  if (stateData.isLoading || !stateData.data) return <Loading />;
+  if (stateData.isLoading || stateData.data === undefined) return <Loading />;
 
   if (stateData.error) {
     return <PageNotFound code={stateData.error} />
@@ -41,8 +41,8 @@ const AppDetails = () => {
   return (
     <WebLayout>
       <>
-        <h1>{stateData.data.category.title[lngCode]}</h1>
-        {stateData.data.files.map((file: any) => (
+        <h1>{stateData.data.category.title[lngCode]} / {stateData.data.title[lngCode]}</h1>
+        {stateData.data.files?.map((file: any) => (
           <div key={file.id}>
             <img
               src={`${process.env.REACT_APP_UPLOADED_FILES_BASE_URL}/api/files/details/${file.id}`}

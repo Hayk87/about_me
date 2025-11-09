@@ -19,6 +19,12 @@ export class CreateProductDto {
   @ApiProperty({ type: Number, description: 'Category ID' })
   category_id: number;
 
+  @ApiProperty({ type: Boolean, description: 'If true it will be visible on website' })
+  is_public: boolean;
+
+  @ApiProperty({ type: Number, description: 'Ordering applications by asc on website' })
+  order: number;
+
   @ApiProperty({ type: Number, description: 'Price, float type' })
   price: number;
 }

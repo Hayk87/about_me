@@ -168,7 +168,7 @@ export default function Page() {
             <th className="text-center">{t('naming')}</th>
             <th className="text-center">{t('category_title')}</th>
             <th className="text-center">{t('products_code')}</th>
-            <th className="text-center">{t('products_link')}</th>
+            <th className="text-center">{t('products_order')}</th>
             <th className="text-center">{t('products_price')}</th>
             <th style={{ width: '220px', textAlign: 'center' }} />
           </tr>
@@ -181,7 +181,7 @@ export default function Page() {
                   <td className="text-center">{item.title?.[lngCode]}</td>
                   <td className="text-center">{item.category?.title?.[lngCode]}</td>
                   <td className="text-center">{item.code}</td>
-                  <td className="text-center">{item.link && <a href={item.link} target="_blank">{item.link}</a>}</td>
+                  <td className="text-center">{item.order}</td>
                   <td className="text-center">{formatNumberWithCommas(item.price)}</td>
                   <td style={{ textAlign: 'center' }}>
                     {checkPermission(profile.data, rightsMapperData.productReadDetails) && (

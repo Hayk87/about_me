@@ -73,6 +73,8 @@ export class ProductsService {
         operator,
         category,
         is_deleted: false,
+        is_public: data.is_public,
+        order: data.order,
       });
       const fileNameGeneral = Date.now();
       let i = 0;
@@ -170,7 +172,7 @@ export class ProductsService {
         price_to: searchParams.price_to,
       });
     }
-    qbList.orderBy('products.created_at', 'DESC');
+    qbList.orderBy('products.order', 'ASC');
     if (!searchParams.all) {
       qbList.offset(offset);
       qbList.limit(limit);
@@ -209,8 +211,24 @@ export class ProductsService {
     code: string,
   ): Promise<any> {
     const category = await this.productCategoryRepository.findOne({
-      where: { is_deleted: false, code },
-      relations: { products: { mainPhoto: true } }
+      where: {
+        is_deleted: false,
+        code,
+        products: {
+          is_public: true,
+          is_deleted: false
+        }
+      },
+      relations: {
+        products: {
+          mainPhoto: true
+        }
+      },
+      order: {
+        products: {
+          order: 'ASC'
+        }
+      }
     });
     if (!category) {
       throw new NotFoundException(translationsSeed.data_not_found.key);
@@ -285,6 +303,8 @@ export class ProductsService {
       product.short_content = data.short_content;
       product.content = data.content;
       product.price = data.price;
+      product.is_public = data.is_public;
+      product.order = data.order;
       product.code = data.code;
       product.link = data.link || null;
       product.category = category;

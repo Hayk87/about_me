@@ -86,6 +86,10 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
     setErrors((prev: any) => ({ ...prev, [key]: '' }));
   }
 
+  const setCheckboxFieldsValue = (key: string) => (ev: any) => {
+    setState((prev: any) => ({ ...prev, [key]: ev.target.checked }));
+  }
+
   const handleFilesChange = (ev: any) => {
     const { files } = ev.target;
     const filesData: any = [];
@@ -122,6 +126,8 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
             code: res.data.code,
             link: res.data.link,
             price: res.data.price,
+            is_public: res.data.is_public,
+            order: res.data.order,
             existsFiles: res.data.files,
           });
         })
@@ -148,6 +154,8 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
     send.append('short_content', JSON.stringify(state.short_content));
     send.append('content', JSON.stringify(state.content));
     send.append('price', state.price);
+    send.append('is_public', state.is_public);
+    send.append('order', state.order);
     for (const file of (state.files || [])) {
       send.append('files', file);
     }
@@ -195,10 +203,9 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
 
   return (
     <>
-      <Row>
-        <Col md={1} />
-        <Col md={10}>
-          <Form onSubmit={handleSave} className={styles.createUpdateForm}>
+      <Form onSubmit={handleSave} className={styles.createUpdateForm}>
+        <Row>
+          <Col>
             <FormGroup>
               <Label htmlFor="category_id">{t('category_title')}</Label>
               <Select
@@ -213,6 +220,8 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
               <Input type="hidden" invalid />
               {errors.category_id && <FormFeedback>{t(errors.category_id)}</FormFeedback>}
             </FormGroup>
+          </Col>
+          <Col>
             <FormGroup>
               <Label for="code">{t('products_code')}</Label>
               <Input
@@ -226,6 +235,75 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
               />
               {errors.code && <FormFeedback>{t(errors.code)}</FormFeedback>}
             </FormGroup>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <FormGroup>
+              <Label for="link">{t('products_link')}</Label>
+              <Input
+                type="text"
+                id="link"
+                placeholder={t('products_link')}
+                onInput={handleChange('link')}
+                value={state.link || ''}
+                invalid={!!errors.link}
+                disabled={updateUnavailable}
+              />
+              {errors.link && <FormFeedback>{t(errors.link)}</FormFeedback>}
+            </FormGroup>
+          </Col>
+          <Col>
+            <FormGroup>
+              <Label for="price">{t('products_price')}</Label>
+              <Input
+                type="text"
+                id="price"
+                placeholder={t('products_price')}
+                onInput={setFloatFieldsValue('price')}
+                value={state.price === undefined ? '' : formatNumberWithCommas(state.price)}
+                invalid={!!errors.price}
+                disabled={updateUnavailable}
+              />
+              {errors.price && <FormFeedback>{t(errors.price)}</FormFeedback>}
+            </FormGroup>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <FormGroup>
+              <Input
+                type="checkbox"
+                id="is_public"
+                placeholder={t('is_public')}
+                onChange={setCheckboxFieldsValue('is_public')}
+                checked={!!state.is_public}
+                invalid={!!errors.is_public}
+                disabled={updateUnavailable}
+              />
+              &nbsp;&nbsp;
+              <Label for="is_public">{t('products_is_public')}</Label>
+              {errors.is_public && <FormFeedback>{t(errors.is_public)}</FormFeedback>}
+            </FormGroup>
+          </Col>
+          <Col>
+            <FormGroup>
+              <Label for="order">{t('products_order')}</Label>
+              <Input
+                type="text"
+                id="order"
+                placeholder={t('products_order')}
+                onInput={setFloatFieldsValue('order')}
+                value={state.order === undefined ? '' : state.order}
+                invalid={!!errors.order}
+                disabled={updateUnavailable}
+              />
+              {errors.order && <FormFeedback>{t(errors.order)}</FormFeedback>}
+            </FormGroup>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
             <ButtonGroup className="mb-3">
               {languages.list.map((lang, i: number) => (
                 <Button
@@ -239,8 +317,12 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
                 </Button>
               ))}
             </ButtonGroup>
-            {languages.list.map((lang, i: number) => (
-              <React.Fragment key={lang.code}>
+          </Col>
+        </Row>
+        {languages.list.map((lang, i: number) => (
+          <React.Fragment key={lang.code}>
+            <Row>
+              <Col>
                 <FormGroup style={i === tab ? {} : { display: 'none' }}>
                   <Label for={`title_${lang.code}`}>{t('naming')}</Label>
                   <Input
@@ -254,6 +336,8 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
                   />
                   {errors.title?.[lang.code] && <FormFeedback>{t(errors.title?.[lang.code])}</FormFeedback>}
                 </FormGroup>
+              </Col>
+              <Col>
                 <FormGroup style={i === tab ? {} : { display: 'none' }}>
                   <Label for={`short_content_${lang.code}`}>{t('short_content')}</Label>
                   <Input
@@ -267,6 +351,10 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
                   />
                   {errors.title?.[lang.code] && <FormFeedback>{t(errors.title?.[lang.code])}</FormFeedback>}
                 </FormGroup>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
                 <FormGroup style={i === tab ? {} : { display: 'none' }}>
                   <Label for={`content_${lang.code}`}>{t('content')}</Label>
                   <Editor
@@ -289,34 +377,12 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
                   />
                   {errors.content?.[lang.code] && <FormFeedback>{t(errors.content?.[lang.code])}</FormFeedback>}
                 </FormGroup>
-              </React.Fragment>
-            ))}
-            <FormGroup>
-              <Label for="link">{t('products_link')}</Label>
-              <Input
-                type="text"
-                id="link"
-                placeholder={t('products_link')}
-                onInput={handleChange('link')}
-                value={state.link || ''}
-                invalid={!!errors.link}
-                disabled={updateUnavailable}
-              />
-              {errors.link && <FormFeedback>{t(errors.link)}</FormFeedback>}
-            </FormGroup>
-            <FormGroup>
-              <Label for="price">{t('products_price')}</Label>
-              <Input
-                type="text"
-                id="price"
-                placeholder={t('products_price')}
-                onInput={setFloatFieldsValue('price')}
-                value={state.price === undefined ? '' : formatNumberWithCommas(state.price)}
-                invalid={!!errors.price}
-                disabled={updateUnavailable}
-              />
-              {errors.price && <FormFeedback>{t(errors.price)}</FormFeedback>}
-            </FormGroup>
+              </Col>
+            </Row>
+          </React.Fragment>
+        ))}
+        <Row>
+          <Col>
             <FormGroup>
               <Label for="files">Files: <small>(Please choose jpeg, jpg, png files up to 10MB each one)</small></Label>
               <Input
@@ -330,7 +396,11 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
               />
               {errors.files && <FormFeedback>{t(errors.files)}</FormFeedback>}
             </FormGroup>
-            {id && state.existsFiles && (
+          </Col>
+        </Row>
+        {id && state.existsFiles && (
+          <Row>
+            <Col>
               <div className={styles.productFiles}>
                 {state.existsFiles
                   .filter((file: IFile) => !removedFiles.includes(file.id))
@@ -344,9 +414,13 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
                         <span className={styles.remove} onClick={removeFile(file)}><CloseIcon /></span>
                       </div>
                     );
-                })}
+                  })}
               </div>
-            )}
+            </Col>
+          </Row>
+        )}
+        <Row>
+          <Col>
             <div className={styles.buttonsActions}>
               <Button type="button" color="secondary" className={styles.goBack} onClick={goBack} size="sm">
                 <FaArrowLeft /> {t('go_back')}
@@ -357,9 +431,9 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
                 </Button>
               )}
             </div>
-          </Form>
-        </Col>
-      </Row>
+          </Col>
+        </Row>
+      </Form>
       {loading && <Loading />}
     </>
   );

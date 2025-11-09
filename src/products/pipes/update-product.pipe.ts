@@ -106,6 +106,20 @@ export class UpdateProductPipe implements PipeTransform {
     } else {
       plainData.price = post.price;
     }
+    if (post.is_public === undefined) {
+      errors.is_public = translationsSeed.required_field.key;
+    } else if (post.is_public !== 'true' && post.is_public !== 'false') {
+      errors.is_public = translationsSeed.invalid_value.key;
+    } else {
+      plainData.is_public = JSON.parse(post.is_public);
+    }
+    if (post.order === undefined) {
+      errors.order = translationsSeed.required_field.key;
+    } else if (!intPositiveNumberRegexp.test(post.order)) {
+      errors.order = translationsSeed.invalid_value.key;
+    } else {
+      plainData.order = parseInt(post.order);
+    }
     if (Object.keys(errors).length) {
       throw new BadRequestException({ message: errors });
     }
