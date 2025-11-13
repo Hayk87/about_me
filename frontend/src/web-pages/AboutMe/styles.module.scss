@@ -2,6 +2,18 @@
   margin-top: 50px !important;
 }
 
+.text {
+  font-size: 17px;
+}
+
+.skills {
+  >li {
+    &+li {
+      margin-top: 10px;
+    }
+  }
+}
+
 .myselfImage {
   margin-bottom: 10px;
 }
