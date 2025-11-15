@@ -902,4 +902,25 @@ export const translationsSeedData = {
       en: 'Your offer successfully sent! Thank you',
     },
   },
+  connect_with_me_linkedin: {
+    key: 'connect_with_me_linkedin',
+    value: {
+      hy: 'Սեղմեք [[LINKEDIN_LINK]] ինձ հետ կապ հաստատելու համար',
+      en: 'Click [[LINKEDIN_LINK]] for connect with me',
+    },
+  },
+  view_more: {
+    key: 'view_more',
+    value: {
+      hy: 'Դիտել ավելին',
+      en: 'View more',
+    },
+  },
+  you_not_found_your_app: {
+    key: 'you_not_found_your_app',
+    value: {
+      hy: 'Չե՞ք գտել ձեզ հարմար ծրագիրը, խնդրում եմ սեղմեք <TAG>այստեղ<TAG> և լրացրեք ֆորման',
+      en: 'If you didn\'t find your app, please click <TAG>here<TAG> and fill out the form.',
+    },
+  },
 };

@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import WebLayout from "../../Layouts/WebLayout";
-import { formatNumberWithCommas, useLanguage, useTranslate, webPagesPath } from "../../utils";
+import {
+  formatNumberWithCommas,
+  useLanguage,
+  useTranslate,
+  webPagesPath,
+  myLinkedinURL
+} from "../../utils";
 import { getProductByCategoryCodeAndProductCode } from "../../api/requests";
 import Loading from "../../components/Loading";
 import PageNotFound from "../PageNotFound";
+import { LinkedinIcon } from "../../components/Icons";
 
 export const path: string = `${webPagesPath.buyApp}/:categoryCode/details/:appCode`;
 
@@ -38,6 +45,8 @@ const AppDetails = () => {
     return <PageNotFound code={stateData.error} />
   }
 
+  const linkedinParams = t('connect_with_me_linkedin').split('[[LINKEDIN_LINK]]');
+
   return (
     <WebLayout>
       <>
@@ -54,6 +63,16 @@ const AppDetails = () => {
         ))}
         <div dangerouslySetInnerHTML={{ __html: stateData.data.content[lngCode] }} />
         <div>{t('products_price')} {formatNumberWithCommas(stateData.data.price)} $</div>
+        <div className="mt-4">
+          {linkedinParams[0]}
+          <a href={myLinkedinURL} target="_blank" rel="noreferrer">
+          <span style={{ fontSize: 23 }}>
+            <LinkedinIcon />
+          </span>
+          </a>
+          {linkedinParams[1]}
+          <span style={{ fontSize: 20 }}>&#128522;</span>
+        </div>
       </>
     </WebLayout>
   );

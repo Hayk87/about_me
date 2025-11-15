@@ -1,12 +1,17 @@
 import React from 'react';
-import { useLanguage, webPagesPath, classnames } from "../../utils";
+import {
+  useLanguage,
+  webPagesPath,
+  classnames,
+  mySelfImage,
+  startedDevelopmentYear,
+  myLinkedinURL
+} from "../../utils";
 import WebLayout from "../../Layouts/WebLayout";
+import { LinkedinIcon } from "../../components/Icons";
 import styles from "./styles.module.scss";
 
 export const path: string = webPagesPath.aboutPage;
-const startedDevelopmentYear = 2015;
-const mySelfImage = '/images/me.png';
-const myLinkedinURL = 'https://www.linkedin.com/in/full-stack-developer-reactjs-nodejs-nestjs/';
 
 const pageContent: Record<string, React.ReactElement> = {
   hy: (
@@ -89,7 +94,11 @@ const pageContent: Record<string, React.ReactElement> = {
       <br/>
       <br/>
       <div className="text-center">
-        Սեղմեք <a href={myLinkedinURL} target="_blank" rel="noreferrer">այստեղ</a>՝ ինձ հետ կապ հաստատելու համար <span style={{ fontSize: 20 }}>&#128522;</span>
+        Սեղմեք <a href={myLinkedinURL} target="_blank" rel="noreferrer">
+            <span style={{ fontSize: 23 }}>
+              <LinkedinIcon />
+            </span>
+        </a> ինձ հետ կապ հաստատելու համար <span style={{ fontSize: 20 }}>&#128522;</span>
       </div>
     </div>
   ),
@@ -170,10 +179,14 @@ const pageContent: Record<string, React.ReactElement> = {
       <br/>
       <br/>
       <div className="text-center">
-        Click <a href={myLinkedinURL} target="_blank" rel="noreferrer"><b>here</b></a> for connect with me <span style={{ fontSize: 20 }}>&#128522;</span>
+        Click <a href={myLinkedinURL} target="_blank" rel="noreferrer">
+          <span style={{ fontSize: 23 }}>
+            <LinkedinIcon />
+          </span>
+        </a> for connect with me <span style={{ fontSize: 20 }}>&#128522;</span>
       </div>
     </div>
-  ),
+  )
 }
 
 const AboutMePage = () => {

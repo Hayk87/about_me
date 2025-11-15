@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import WebLayout from "../../Layouts/WebLayout";
 import PageNotFound from "../PageNotFound";
 import Loading from "../../components/Loading";
+import OfferForm from "../../components/OfferForm";
 import { useLanguage, useTranslate, webPagesPath } from "../../utils";
 import { getProductsListByCategoryCode } from "../../api/requests";
 import styles from "./styles.module.scss";
@@ -21,6 +22,9 @@ const AppCategoryList = () => {
   const { lngCode, location } = useLanguage();
   const params = useParams();
   const [stateData, setStateData] = useState<IStateData>(initialStateData);
+  const [showForm, setShowForm] = useState<boolean>(false);
+
+  const notFoundAppMsgParams = useMemo(() => t('you_not_found_your_app').split('<TAG>'), [lngCode, t]);
 
   useEffect(() => {
     setStateData(prev => ({ ...prev, isLoading: true, error: '' }));
@@ -60,6 +64,14 @@ const AppCategoryList = () => {
               </div>
             </div>
           ))}
+        </div>
+        <div className="mt-5">
+          <div>
+            {notFoundAppMsgParams[0]}
+            <span className={styles.here} onClick={() => setShowForm(true)}>{notFoundAppMsgParams[1]}</span>
+            {notFoundAppMsgParams[2]}
+          </div>
+          {showForm && <OfferForm />}
         </div>
       </div>
     </WebLayout>

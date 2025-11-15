@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { SystemUserInterface } from "../interfaces";
 
 export * from './hooks';
+export * from './personal-configs';
 export * from './rights-mapper-data';
 export * as adminPagesPath from './admin-pages-path';
 export * as webPagesPath from './web-pages-path';
