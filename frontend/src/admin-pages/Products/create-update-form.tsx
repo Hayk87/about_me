@@ -156,6 +156,7 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
     send.append('price', state.price);
     send.append('is_public', state.is_public);
     send.append('order', state.order);
+    send.append('link', state.link);
     for (const file of (state.files || [])) {
       send.append('files', file);
     }

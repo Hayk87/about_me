@@ -923,4 +923,18 @@ export const translationsSeedData = {
       en: 'If you didn\'t find your app, please click <TAG>here<TAG> and fill out the form.',
     },
   },
+  have_some_offer: {
+    key: 'have_some_offer',
+    value: {
+      hy: 'Եթե ունեք առաջարկ կամ ցանկանում եք պատվիրել նախագիծ, խնդրում եմ լրացրեք ստորև ներկայացված ձևը։',
+      en: 'If you have some offer, please fill the form below:',
+    },
+  },
+  visit_to_app: {
+    key: 'visit_to_app',
+    value: {
+      hy: 'Այցելեք հավելված',
+      en: 'Visit to app',
+    },
+  },
 };

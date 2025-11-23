@@ -7,12 +7,16 @@
 
   }
   .products {
-    .product {
-      img {
-        max-width: 500px;
-      }
-      .viewMore {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2%;
 
+    .product {
+      width: 32%;
+      margin-bottom: 10px;
+
+      .viewMore {
+        float: right;
       }
     }
   }

@@ -46,11 +46,23 @@ const AppDetails = () => {
   }
 
   const linkedinParams = t('connect_with_me_linkedin').split('[[LINKEDIN_LINK]]');
+  const title = `${stateData.data.category.title[lngCode]} / ${stateData.data.title[lngCode]}`;
 
   return (
     <WebLayout>
       <>
-        <h1>{stateData.data.category.title[lngCode]} / {stateData.data.title[lngCode]}</h1>
+        <h1>{title}</h1>
+        {stateData.data.mainPhoto?.id && (
+          <div>
+            <img
+              src={`${process.env.REACT_APP_UPLOADED_FILES_BASE_URL}/api/files/details/${stateData.data.mainPhoto?.id}`}
+              alt={title}
+              title={title}
+              width={300}
+            />
+          </div>
+        )}
+
         {stateData.data.files?.map((file: any) => (
           <div key={file.id}>
             <img
@@ -63,6 +75,11 @@ const AppDetails = () => {
         ))}
         <div dangerouslySetInnerHTML={{ __html: stateData.data.content[lngCode] }} />
         <div>{t('products_price')} {formatNumberWithCommas(stateData.data.price)} $</div>
+        {stateData.data.link && (
+          <div>
+            <a href={stateData.data.link} target="_blank" rel="noreferrer">{t('visit_to_app')}</a>
+          </div>
+        )}
         <div className="mt-4">
           {linkedinParams[0]}
           <a href={myLinkedinURL} target="_blank" rel="noreferrer">
