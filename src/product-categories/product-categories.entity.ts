@@ -13,6 +13,9 @@ export class ProductCategoriesEntity {
   code: string;
 
   @Column({ default: false })
+  is_public?: boolean;
+
+  @Column({ default: false })
   is_deleted?: boolean;
 
   @OneToMany(() => ProductsEntity, (product) => product.category)

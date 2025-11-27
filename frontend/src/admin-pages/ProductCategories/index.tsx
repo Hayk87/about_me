@@ -137,6 +137,7 @@ export default function Page() {
           <thead>
           <tr>
             <th className="text-center">{t('naming')}</th>
+            <th className="text-center">{t('products_is_publiced')}</th>
             <th style={{ width: '220px', textAlign: 'center' }} />
           </tr>
           </thead>
@@ -146,6 +147,7 @@ export default function Page() {
               {LIST.map(item => (
                 <tr key={item.product_category_id}>
                   <td className="text-center">{item.product_category_title?.[lngCode]}</td>
+                  <td className="text-center">{t(item.product_category_is_public ? 'yes' : 'no')}</td>
                   <td style={{ textAlign: 'center' }}>
                     {checkPermission(profile.data, rightsMapperData.productCategoriesReadDetails) && (
                       <>

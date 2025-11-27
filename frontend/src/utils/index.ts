@@ -29,10 +29,10 @@ export const classnames = (classes: { [key: string]: boolean }): string => (
     .join(' ')
 );
 
-export const formatNumberWithCommas = (value: number | string | undefined) => {
+export const formatNumberWithCommas = (value: number | string | undefined | null) => {
   const number = Number(value);
-  if (isNaN(number)) return '';
-  let valueStrParsed = (value === undefined ? '' : value).toString();
+  if (isNaN(number) || value === undefined || value === null) return '';
+  let valueStrParsed = value.toString();
   const hasMinusSymbol = !!valueStrParsed.match(/^-/);
   if (hasMinusSymbol) {
     valueStrParsed = valueStrParsed.slice(1);

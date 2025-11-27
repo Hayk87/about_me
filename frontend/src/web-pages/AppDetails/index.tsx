@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import ReactDOM from 'react-dom';
 import { useParams } from "react-router-dom";
 import WebLayout from "../../Layouts/WebLayout";
 import {
@@ -12,6 +13,7 @@ import { getProductByCategoryCodeAndProductCode } from "../../api/requests";
 import Loading from "../../components/Loading";
 import PageNotFound from "../PageNotFound";
 import { LinkedinIcon } from "../../components/Icons";
+import styles from "./styles.module.scss";
 
 export const path: string = `${webPagesPath.buyApp}/:categoryCode/details/:appCode`;
 
@@ -24,9 +26,14 @@ const initialStateData = { isLoading: false, error: '', data: undefined };
 
 const AppDetails = () => {
   const [stateData, setStateData] = useState<IStateData>(initialStateData);
+  const [selectedImage, setSelectedImage] = useState<string>('');
   const params = useParams();
   const { t } = useTranslate();
   const { lngCode } = useLanguage();
+
+  const showImage = (source: string) => () => {
+    setSelectedImage(source);
+  }
 
   useEffect(() => {
     setStateData(prev => ({ ...prev, isLoading: true, error: '' }));
@@ -50,37 +57,34 @@ const AppDetails = () => {
 
   return (
     <WebLayout>
-      <>
+      <div className={styles.AppDetails}>
         <h1>{title}</h1>
-        {stateData.data.mainPhoto?.id && (
-          <div>
-            <img
-              src={`${process.env.REACT_APP_UPLOADED_FILES_BASE_URL}/api/files/details/${stateData.data.mainPhoto?.id}`}
-              alt={title}
-              title={title}
-              width={300}
-            />
-          </div>
-        )}
-
-        {stateData.data.files?.map((file: any) => (
-          <div key={file.id}>
-            <img
-              src={`${process.env.REACT_APP_UPLOADED_FILES_BASE_URL}/api/files/details/${file.id}`}
-              alt={stateData.data.category.title[lngCode]}
-              title={stateData.data.category.title[lngCode]}
-              width={300}
-            />
-          </div>
-        ))}
         <div dangerouslySetInnerHTML={{ __html: stateData.data.content[lngCode] }} />
-        <div>{t('products_price')} {formatNumberWithCommas(stateData.data.price)} $</div>
+        <div className={styles.AppFiles}>
+          {stateData.data.files?.map((file: any) => {
+            const sourcePath = `${process.env.REACT_APP_UPLOADED_FILES_BASE_URL}/api/files/details/${file.id}`;
+            return (
+              <div key={file.id} className={styles.AppFileItem}>
+                <img
+                  src={sourcePath}
+                  alt={stateData.data.category.title[lngCode]}
+                  title={stateData.data.category.title[lngCode]}
+                  width={300}
+                  onClick={showImage(sourcePath)}
+                />
+              </div>
+            );
+          })}
+        </div>
+        <div className={styles.products_price}>
+          {t('products_price')} {stateData.data.price ? formatNumberWithCommas(stateData.data.price) + ' $' : t('contract_price')}
+        </div>
         {stateData.data.link && (
-          <div>
+          <div className={styles.products_link}>
             <a href={stateData.data.link} target="_blank" rel="noreferrer">{t('visit_to_app')}</a>
           </div>
         )}
-        <div className="mt-4">
+        <div className={styles.contact_with_me}>
           {linkedinParams[0]}
           <a href={myLinkedinURL} target="_blank" rel="noreferrer">
           <span style={{ fontSize: 23 }}>
@@ -90,7 +94,15 @@ const AppDetails = () => {
           {linkedinParams[1]}
           <span style={{ fontSize: 20 }}>&#128522;</span>
         </div>
-      </>
+        {selectedImage && (
+          ReactDOM.createPortal(
+            <div className={styles.showImage} onClick={() => setSelectedImage('')}>
+              <img src={selectedImage} onClick={(e) => e.stopPropagation()} />
+            </div>,
+            document.body
+          )
+        )}
+      </div>
     </WebLayout>
   );
 }

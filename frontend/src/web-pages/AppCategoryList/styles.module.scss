@@ -12,7 +12,9 @@
     gap: 2%;
 
     .product {
-      width: 32%;
+      @media screen and (min-width: 1200px) {
+        width: 32%;
+      }
       margin-bottom: 10px;
 
       .viewMore {

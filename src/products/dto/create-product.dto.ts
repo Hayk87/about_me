@@ -25,6 +25,6 @@ export class CreateProductDto {
   @ApiProperty({ type: Number, description: 'Ordering applications by asc on website' })
   order: number;
 
-  @ApiProperty({ type: Number, description: 'Price, float type' })
+  @ApiPropertyOptional({ type: Number, description: 'Price, float type' })
   price: number;
 }

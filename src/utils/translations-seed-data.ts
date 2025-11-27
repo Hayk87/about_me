@@ -853,6 +853,13 @@ export const translationsSeedData = {
       en: 'Is public',
     },
   },
+  products_is_publiced: {
+    key: 'products_is_publiced',
+    value: {
+      hy: 'Հրապարակված',
+      en: 'Is public',
+    },
+  },
   submit: {
     key: 'submit',
     value: {
@@ -935,6 +942,20 @@ export const translationsSeedData = {
     value: {
       hy: 'Այցելեք հավելված',
       en: 'Visit to app',
+    },
+  },
+  contract_price: {
+    key: 'contract_price',
+    value: {
+      hy: 'Պայմանագրային',
+      en: 'Contractual',
+    },
+  },
+  offers: {
+    key: 'offers',
+    value: {
+      hy: 'Առաջարկներ',
+      en: 'Offers',
     },
   },
 };

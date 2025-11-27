@@ -14,7 +14,7 @@ import {
 export class UpdateProductPipe implements PipeTransform {
   transform(post: any, metadata: ArgumentMetadata) {
     post.category_id = parseInt(post.category_id);
-    post.price = parseInt(post.price);
+    post.price = post.price === undefined ? post.price : parseInt(post.price);
     try {
       post.title = JSON.parse(post.title);
     } catch (e) {}
@@ -69,7 +69,7 @@ export class UpdateProductPipe implements PipeTransform {
           [lang.code]: post.short_content?.[lang.code],
         };
       }
-      if (typeof post.content?.[lang.code] !== 'string') {
+      if (post.content?.[lang.code] && typeof post.content?.[lang.code] !== 'string') {
         errors.content = {
           ...errors.content,
           [lang.code]: translationsSeed.invalid_value.key,
@@ -96,10 +96,8 @@ export class UpdateProductPipe implements PipeTransform {
     } else {
       plainData.category_id = post.category_id;
     }
-    if (post.price === undefined) {
-      errors.price = translationsSeed.required_field.key;
-    } else if (
-      typeof post.price !== 'number' ||
+    if (
+      (post.price && typeof post.price !== 'number') ||
       (typeof post.price === 'number' && !intPositiveNumberRegexp.test(post.price))
     ) {
       errors.price = translationsSeed.invalid_value.key;
@@ -107,14 +105,14 @@ export class UpdateProductPipe implements PipeTransform {
       plainData.price = post.price;
     }
     if (post.is_public === undefined) {
-      errors.is_public = translationsSeed.required_field.key;
+      plainData.is_public = false;
     } else if (post.is_public !== 'true' && post.is_public !== 'false') {
       errors.is_public = translationsSeed.invalid_value.key;
     } else {
       plainData.is_public = JSON.parse(post.is_public);
     }
     if (post.order === undefined) {
-      errors.order = translationsSeed.required_field.key;
+      plainData.order = 0;
     } else if (!intPositiveNumberRegexp.test(post.order)) {
       errors.order = translationsSeed.invalid_value.key;
     } else {

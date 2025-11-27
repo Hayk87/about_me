@@ -1,0 +1,48 @@
+.AppDetails {
+  .AppFiles {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+    .AppFileItem {
+      img {
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+  .products_price {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  .products_link {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  .contact_with_me {
+    text-align: center;
+    margin-top: 15px;
+  }
+}
+
+.showImage {
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99999;
+  background-color: rgb(229 226 226 / 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    max-width: 88%;
+  }
+}

@@ -16,7 +16,7 @@ interface CreateUpdateFormInterface {
 }
 
 const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement => {
-  const [state, setState] = useState<{ code: string, title: Record<string, string> }>({ code: '', title: {} });
+  const [state, setState] = useState<{ code: string, is_public: boolean, title: Record<string, string> }>({ code: '', is_public: false, title: {} });
   const [errors, setErrors] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(false);
   const { t } = useTranslate();
@@ -29,11 +29,20 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
   const updateUnavailable = !!(id && !checkPermission(profile.data, rightsMapperData.productCategoriesUpdate));
 
   const setValue = (lang: string) => (ev: any) => {
+    const { value } = ev.target;
     setState(prev => ({ ...prev, title: { ...prev.title, [lang]: ev.target.value } }));
+    if (lang === 'en') {
+      setState((prev: any) => ({ ...prev, code: value.split(' ').filter((v: string) => !!v.trim()).join('-').toLowerCase() }));
+      setErrors((prev: any) => ({ ...prev, code: '' }));
+    }
   }
 
   const setCode = (ev: any) => {
     setState(prev => ({ ...prev, code: ev.target.value }));
+  }
+
+  const setCheckboxFieldsValue = (key: string) => (ev: any) => {
+    setState((prev: any) => ({ ...prev, [key]: ev.target.checked }));
   }
 
   const goBack = () => {
@@ -71,7 +80,7 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
       setLoading(true);
       getProductsCategoryById(id)
         .then(res => {
-          setState({ title: res.data.title, code: res.data.code });
+          setState({ title: res.data.title, is_public: res.data.is_public, code: res.data.code });
         })
         .catch(err => {
           console.log(err.response.data.message);
@@ -87,25 +96,10 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
     <>
       <Form onSubmit={handleSave} className={styles.createUpdateForm}>
         <Row>
-          <Col>
-            <FormGroup>
-              <Label for="code">{t('code')}</Label>
-              <Input
-                type="text"
-                id="code"
-                placeholder={t('code')}
-                onInput={setCode}
-                value={state.code || ''}
-                invalid={!!errors.code}
-                readOnly={updateUnavailable}
-              />
-              {errors.code && <FormFeedback>{t(errors.code)}</FormFeedback>}
-            </FormGroup>
-          </Col>
           {languages.list.map(lang => (
             <Col key={lang.code}>
               <FormGroup>
-                <Label for={`title_${lang.code}`}>{`${t('naming')} (${lang.name})`}</Label>
+                <Label for={`title_${lang.code}`}>{`${t('naming')} (${lang.name})`} <span className="text-danger">*</span></Label>
                 <Input
                   type="text"
                   id={`title_${lang.code}`}
@@ -119,6 +113,37 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
               </FormGroup>
             </Col>
           ))}
+          <Col>
+            <FormGroup>
+              <Label for="code">{t('code')} <span className="text-danger">*</span></Label>
+              <Input
+                type="text"
+                id="code"
+                placeholder={t('code')}
+                onInput={setCode}
+                value={state.code || ''}
+                invalid={!!errors.code}
+                readOnly={updateUnavailable}
+              />
+              {errors.code && <FormFeedback>{t(errors.code)}</FormFeedback>}
+            </FormGroup>
+          </Col>
+          <Col>
+            <FormGroup style={{ marginTop: 35 }}>
+              <Input
+                type="checkbox"
+                id="is_public"
+                placeholder={t('is_public')}
+                onChange={setCheckboxFieldsValue('is_public')}
+                checked={state.is_public}
+                invalid={!!errors.is_public}
+                disabled={updateUnavailable}
+              />
+              &nbsp;&nbsp;
+              <Label for="is_public">{t('products_is_public')}</Label>
+              {errors.is_public && <FormFeedback>{t(errors.is_public)}</FormFeedback>}
+            </FormGroup>
+          </Col>
         </Row>
         <Row>
           <Col>

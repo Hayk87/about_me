@@ -19,6 +19,13 @@ export class UpdateProductCategoryPipe implements PipeTransform {
     } else {
       plainData.code = post.code;
     }
+    if (post.is_public === undefined) {
+      plainData.is_public = false;
+    } else if (typeof post.is_public !== 'boolean') {
+      errors.is_public = translationsSeed.invalid_value.key;
+    } else {
+      plainData.is_public = post.is_public;
+    }
     for (const lang of languagesListData) {
       if (!post.title?.[lang.code]) {
         errors.title = {

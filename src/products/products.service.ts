@@ -65,11 +65,11 @@ export class ProductsService {
       }
       const product = await queryRunner.manager.getRepository(ProductsEntity).create({
         code: data.code,
-        link: data.link || null,
+        link: data.link === undefined ? null : data.link,
         title: data.title,
         short_content: data.short_content,
         content: data.content,
-        price: data.price,
+        price: data.price === undefined ? null : data.price,
         operator,
         category,
         is_deleted: false,
@@ -213,6 +213,7 @@ export class ProductsService {
     const category = await this.productCategoryRepository.findOne({
       where: {
         is_deleted: false,
+        is_public: true,
         code,
         products: {
           is_public: true,
@@ -302,11 +303,11 @@ export class ProductsService {
       product.title = data.title;
       product.short_content = data.short_content;
       product.content = data.content;
-      product.price = data.price;
+      product.price = data.price === undefined ? null : data.price;
       product.is_public = data.is_public;
       product.order = data.order;
       product.code = data.code;
-      product.link = data.link || null;
+      product.link = data.link === undefined ? null : data.link;
       product.category = category;
       const existsFiles = product.files.filter(item => !data.removedFiles.includes(item.id));
       const removedFilesData = product.files.filter(item => data.removedFiles.includes(item.id));

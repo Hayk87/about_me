@@ -62,8 +62,13 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
   const updateUnavailable = !!(id && !checkPermission(profile.data, rightsMapperData.productUpdate));
 
   const setValue = (lang: string, key: 'title' | 'content' | 'short_content') => (ev: any) => {
-    setState((prev: any) => ({ ...prev, [key]: { ...prev[key], [lang]: ev.target.value } }));
+    const { value } = ev.target;
+    setState((prev: any) => ({ ...prev, [key]: { ...prev[key], [lang]: value } }));
     setErrors((prev: any) => ({ ...prev, [key]: { ...prev[key], [lang]: '' } }));
+    if (key === 'title' && lang === 'en') {
+      setState((prev: any) => ({ ...prev, code: value.split(' ').filter((v: string) => !!v.trim()).join('-').toLowerCase() }));
+      setErrors((prev: any) => ({ ...prev, code: '' }));
+    }
   }
 
   const setTextAreaValue = (lang: string, key: 'title' | 'content') => (value: string) => {
@@ -148,15 +153,15 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
     setErrors({});
     let promise = null;
     const send = new FormData();
-    send.append('category_id', state.category_id);
-    send.append('code', state.code);
-    send.append('title', JSON.stringify(state.title));
-    send.append('short_content', JSON.stringify(state.short_content));
-    send.append('content', JSON.stringify(state.content));
-    send.append('price', state.price);
-    send.append('is_public', state.is_public);
-    send.append('order', state.order);
-    send.append('link', state.link);
+    if (state.category_id) send.append('category_id', state.category_id);
+    if (state.code) send.append('code', state.code);
+    if (state.title) send.append('title', JSON.stringify(state.title));
+    if (state.short_content) send.append('short_content', JSON.stringify(state.short_content));
+    if (state.content) send.append('content', JSON.stringify(state.content));
+    if (state.price) send.append('price', state.price);
+    if (state.is_public) send.append('is_public', state.is_public);
+    if (state.order) send.append('order', state.order);
+    if (state.link) send.append('link', state.link);
     for (const file of (state.files || [])) {
       send.append('files', file);
     }
@@ -208,7 +213,7 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
         <Row>
           <Col>
             <FormGroup>
-              <Label htmlFor="category_id">{t('category_title')}</Label>
+              <Label htmlFor="category_id">{t('category_title')} <span className="text-danger">*</span></Label>
               <Select
                 id="category_id"
                 placeholder={t('category_title')}
@@ -224,7 +229,7 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
           </Col>
           <Col>
             <FormGroup>
-              <Label for="code">{t('products_code')}</Label>
+              <Label for="code">{t('products_code')} <span className="text-danger">*</span></Label>
               <Input
                 type="text"
                 id="code"
@@ -325,7 +330,7 @@ const CreateUpdateForm = ({ id }: CreateUpdateFormInterface): React.ReactElement
             <Row>
               <Col>
                 <FormGroup style={i === tab ? {} : { display: 'none' }}>
-                  <Label for={`title_${lang.code}`}>{t('naming')}</Label>
+                  <Label for={`title_${lang.code}`}>{t('naming')} <span className="text-danger">*</span></Label>
                   <Input
                     type="text"
                     id={`title_${lang.code}`}

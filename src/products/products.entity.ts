@@ -30,7 +30,7 @@ export class ProductsEntity {
   @Column({ type: 'jsonb', nullable: true })
   short_content: object;
 
-  @Column({ type: 'jsonb', nullable: false })
+  @Column({ type: 'jsonb', nullable: true })
   content: object;
 
   @Column({ default: false })
@@ -42,7 +42,7 @@ export class ProductsEntity {
   @Column({ default: false })
   is_deleted?: boolean;
 
-  @Column({ nullable: false, type: 'int4' })
+  @Column({ nullable: true, type: 'int4' })
   price: number;
 
   @ManyToOne(() => ProductCategoriesEntity, (m) => m.products)

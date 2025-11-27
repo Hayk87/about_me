@@ -75,7 +75,7 @@ const OfferForm = () => {
       ) : (
         <Form onSubmit={handleSubmit}>
           <Row>
-            <Col>
+            <Col xs="12" sm="6">
               <FormGroup>
                 <Label for="name">{t('your_name')}: <span className="text-danger">*</span></Label>
                 <Input
@@ -90,7 +90,7 @@ const OfferForm = () => {
                 {errors.name && <FormFeedback>{t(errors.name)}</FormFeedback>}
               </FormGroup>
             </Col>
-            <Col>
+            <Col xs="12" sm="6">
               <FormGroup>
                 <Label for="email">{t('email')}: <span className="text-danger">*</span></Label>
                 <Input

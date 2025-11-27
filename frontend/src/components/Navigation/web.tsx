@@ -98,7 +98,7 @@ export const NavigationWeb = (props: NavigationWebProp) => {
             {menuData.map(item => {
               const path = `/${item.path}`;
               let activeClass = location.pathname === path ? styles.activeMenu : undefined;
-              if (item.children) {
+              if (item.children?.length) {
                 return (
                   <UncontrolledDropdown nav inNavbar key={item.title}>
                     <DropdownToggle nav caret>
@@ -114,6 +114,8 @@ export const NavigationWeb = (props: NavigationWebProp) => {
                     </DropdownMenu>
                   </UncontrolledDropdown>
                 );
+              } else if (item.title === 'buy_app') {
+                return null;
               }
               return (
                 <NavItem key={item.title}>
@@ -121,7 +123,7 @@ export const NavigationWeb = (props: NavigationWebProp) => {
                 </NavItem>
               );
             })}
-            <UncontrolledDropdown nav inNavbar style={{ margin: '0 auto' }}>
+            <UncontrolledDropdown nav inNavbar style={isWindow ? { margin: '0 auto', marginRight: 0 } : {}}>
               <DropdownToggle nav caret>
                 {currentLang.name}
               </DropdownToggle>

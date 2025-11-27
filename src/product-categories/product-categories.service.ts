@@ -59,7 +59,8 @@ export class ProductCategoriesService {
     const alias = 'product_category';
     const qbList = this.productCategoriesRepository
       .createQueryBuilder(alias)
-      .andWhere(`${alias}.is_deleted=:is_deleted`, { is_deleted: false });
+      .andWhere(`${alias}.is_deleted=:is_deleted`, { is_deleted: false })
+      .andWhere(`${alias}.is_public=:is_public`, { is_public: true });
     qbList.orderBy(`${alias}.id`, 'DESC');
     const list = await qbList.execute();
     return { list };
@@ -68,7 +69,11 @@ export class ProductCategoriesService {
   async createProductCategory(
     data: CreateUpdateProductCategoryDto,
   ): Promise<ProductCategoriesEntity> {
-    let item = this.productCategoriesRepository.create({ title: data.title, code: data.code });
+    let item = this.productCategoriesRepository.create({
+      title: data.title,
+      code: data.code,
+      is_public: data.is_public
+    });
     item = await this.productCategoriesRepository.save(item);
     return item;
   }
@@ -90,6 +95,7 @@ export class ProductCategoriesService {
     const item = await this.findProductCategoryById(id);
     item.title = data.title;
     item.code = data.code;
+    item.is_public = data.is_public;
     await this.productCategoriesRepository.save(item);
     return item;
   }

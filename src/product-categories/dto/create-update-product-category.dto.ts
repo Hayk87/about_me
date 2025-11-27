@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateUpdateProductCategoryDto {
   @ApiProperty({
@@ -12,4 +12,10 @@ export class CreateUpdateProductCategoryDto {
     description: 'Code',
   })
   code: string;
+
+  @ApiPropertyOptional({
+    type: Boolean,
+    description: 'Is public',
+  })
+  is_public: boolean;
 }

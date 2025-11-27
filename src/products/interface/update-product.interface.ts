@@ -5,7 +5,7 @@ export interface UpdateProductInterface {
   short_content?: Record<string, string>;
   content: Record<string, string>;
   category_id: number;
-  price: number;
+  price?: number;
   is_public: boolean;
   order: number;
   removedFiles: string[];
